@@ -1,4 +1,7 @@
 import csv
+import json
+import requests
+
 import boto3
 from django.shortcuts import render
 from .forms import SearchForm
@@ -8,7 +11,19 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import JsonResponse
 
-from OrchardGuard.dynamodb import insert_item_into_dynamodb, insert_data_into_dynamodb, query, query_by_partition_key
+from OrchardGuard.dynamodb import insert_item_into_dynamodb, insert_data_into_dynamodb, query, query_by_partition_key, \
+    scan_table
+
+from elasticsearch import Elasticsearch
+from django.shortcuts import render
+from .forms import SearchForm  # Import your SearchForm
+
+# Define Elasticsearch client
+es = Elasticsearch(hosts=['https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com'],
+                   http_auth=('Lavanya', 'Orchardguard@04'),
+                   headers={"Content-Type": "application/json"}
+                   )
+
 
 
 def insert_item_view(request):
@@ -64,86 +79,112 @@ def load_excel(request):
         return JsonResponse({'status': 'Failed to load data'})
 
 
+def index_documents_opensearch(request):
+    with open('OrchardGuard/AppleAccessions.json', 'r') as file:
+        json_data = json.load(file)
+
+    # Prepare bulk indexing request
+    bulk_request = ''
+    index_name = 'accessions'
+
+    for document in json_data:
+        # Add metadata line
+        bulk_request += json.dumps({"index": {"_index": index_name}}) + '\n'
+        # Add JSON document
+        bulk_request += json.dumps(document) + '\n'
+
+    # Send bulk indexing request
+    url = 'https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com/_bulk'
+    headers = {'Content-Type': 'application/json'}
+    auth = ("Lavanya", "Orchardguard@04")
+    response = requests.post(url, auth=auth, headers=headers, data=bulk_request)
+
+    # Check response status
+    if response.status_code == 200:
+        print("Documents indexed successfully!")
+    else:
+        print("Failed to index documents:", response.text)
+
+
 def search(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
-            # Get form data
-            # Get form data
-            search_attribute = form.cleaned_data.get('search_attribute')
-            search_term = form.cleaned_data.get('search_term')
 
-            queries = []
+            # Map form field names to DynamoDB attribute names
+            attribute_mapping = {
+                'pedigree': 'e_pedigree',
+                'genus': 'e_genus',
+                'species': 'e_species'
+            }
 
-            # Add query for partition key
-            if search_attribute == 'acno':
-                items = query_by_partition_key(int(search_term))
-                return render(request, 'OrchardGuard/search_results.html', {'items': items})
+            # Construct filter expression, attribute names, and values
+            filter_expression_parts = []
+            expression_attribute_names = {}
+            expression_attribute_values = {}
+            for field, value in form.cleaned_data.items():
+                if value:
+                    db_field = attribute_mapping.get(field, field)
+                    if field == 'acno':
+                        filter_expression_parts.append("#acno = :acno")
+                        expression_attribute_names['#acno'] = 'acno'
+                        expression_attribute_values[':acno'] = int(value)
+                    else:
+                        filter_expression_parts.append(f"#{db_field} = :{field}")
+                        expression_attribute_names[f"#{db_field}"] = db_field
+                        expression_attribute_values[f":{field}"] = value
 
-            # Add queries for each indexed attribute
-            elif search_attribute ==  'accession':
-                queries.append({
-                    'IndexName': 'accession-index',  # Replace with the name of the GSI for accession
-                    'KeyConditionExpression': 'accession = :accession',
-                    'ExpressionAttributeValues': {':accession': search_term}
-                })
+            # Join filter expression parts
+            filter_expression = ' AND '.join(filter_expression_parts)
 
-            elif search_attribute ==  'cultivar_name':
-                queries.append({
-                    'IndexName': 'cultivar_name-index',  # Replace with the name of the GSI for accession
-                    'KeyConditionExpression': 'cultivar_name = :cultivar_name',
-                    'ExpressionAttributeValues': {':cultivar_name': search_term}
-                })
+            # Query the DynamoDB table
+            response = scan_table(filter_expression,expression_attribute_names,expression_attribute_values)
 
-            elif search_attribute == 'origin_country':
-                queries.append({
-                    'IndexName': 'origin_country-index',  # Replace with the name of the GSI for origin_country
-                    'KeyConditionExpression': 'origin_country = :origin_country',
-                    'ExpressionAttributeValues': {':origin_country': search_term}
-                })
+            # Process search results
+            items = response['Items']
 
-            elif search_attribute == 'origin_city':
-                queries.append({
-                    'IndexName': 'origin_city-index',  # Replace with the name of the GSI for origin_country
-                    'KeyConditionExpression': 'origin_city = :origin_city',
-                    'ExpressionAttributeValues': {':origin_city': search_term}
-                })
-
-            elif search_attribute == 'origin_province':
-                queries.append({
-                    'IndexName': 'origin_province-index',  # Replace with the name of the GSI for origin_country
-                    'KeyConditionExpression': 'origin_province = :origin_province',
-                    'ExpressionAttributeValues': {':origin_province': search_term}
-                })
-
-            elif search_attribute == 'pedigree':
-                queries.append({
-                    'IndexName': 'e_pedigree-index',  # Replace with the name of the GSI for origin_country
-                    'KeyConditionExpression': 'e_pedigree = :pedigree',
-                    'ExpressionAttributeValues': {':pedigree': search_term}
-                })
-
-            elif search_attribute == 'genus':
-                queries.append({
-                    'IndexName': 'e_genus-index',  # Replace with the name of the GSI for origin_country
-                    'KeyConditionExpression': 'e_genus = :genus',
-                    'ExpressionAttributeValues': {':genus': search_term}
-                })
-
-            elif search_attribute == 'species':
-                queries.append({
-                    'IndexName': 'e_species-index',  # Replace with the name of the GSI for origin_country
-                    'KeyConditionExpression': 'e_species = :species',
-                    'ExpressionAttributeValues': {':species': search_term}
-                })
-
-            # Execute queries and combine results
-            items = query(queries)
-            return render(request, 'OrchardGuard/search_results.html', {'items': items})
-
+            # Render the search results in the template
+            return render(request, 'OrchardGuard/search_results.html', {'results': items})
     else:
         form = SearchForm()
-
     return render(request, 'OrchardGuard/search.html', {'form': form})
+
+
+
+def elastic_search(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            # Construct Elasticsearch query based on form data
+            query = {
+                "query": {
+                    "bool": {
+                        "must": []
+                    }
+                }
+            }
+
+            # Add search terms from the form fields
+            for field, value in form.cleaned_data.items():
+                if value:
+                    query["query"]["bool"]["must"].append({"match": {field: value}})
+
+                    # Make a POST request to Elasticsearch
+            response = requests.post(
+                'https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com/_search',
+                auth=('Lavanya', 'Orchardguard@04'),
+                json=query)
+
+            # Extract search results
+            items = response.json()['hits']['hits']
+
+            print("items ",items)
+
+            # Render the search results in the template
+            return render(request, 'OrchardGuard/search_results.html', {'items': items})
+    else:
+        form = SearchForm()
+    return render(request, 'OrchardGuard/search.html', {'form': form})
+
 
 

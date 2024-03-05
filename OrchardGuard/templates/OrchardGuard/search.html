@@ -9,11 +9,12 @@
 <body>
     <h1>Search Form</h1>
 
-    <form action="{% url 'search' %}" method="post">
+   <form method="post">
         {% csrf_token %}
-        {{ form.search_attribute }}
-        {{ form.search_term }}
+        {{ form.as_p }}
         <button type="submit">Search</button>
-    </form>
+   </form>
+
+
 </body>
 </html>

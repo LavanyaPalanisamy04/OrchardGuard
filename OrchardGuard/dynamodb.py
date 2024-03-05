@@ -64,3 +64,13 @@ def query_by_partition_key(acno):
     )
     print(response)
     return response.get('Items', [])
+
+def scan_table(filter_expression,expression_attribute_names,expression_attribute_values):
+    print("filter_expression ",filter_expression)
+    print("expression_attribute_names ", expression_attribute_names)
+    print("expression_attribute_values : ",expression_attribute_values)
+    response = table.scan(FilterExpression=filter_expression,
+                ExpressionAttributeNames=expression_attribute_names,
+                ExpressionAttributeValues=expression_attribute_values)
+    print(response)
+    return response
