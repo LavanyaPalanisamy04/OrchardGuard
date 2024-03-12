@@ -12,4 +12,8 @@ class SearchForm(forms.Form):
     e_genus = forms.CharField(label='Genus', max_length=100,required=False)
     e_species = forms.CharField(label='Species', max_length=100,required=False)
 
+class ListSearchForm(forms.Form):
+    acnos = forms.CharField(label='Comma separated Acnos', max_length=100, required=True)
+
+
 

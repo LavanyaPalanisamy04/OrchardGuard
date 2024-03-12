@@ -17,12 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from OrchardGuard.views import insert_item_view, load_excel, search, index_documents_opensearch, elastic_search
+from OrchardGuard.views import insert_item_view, load_excel, search, index_documents_opensearch, elastic_search, \
+    list_search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('insert-item/', insert_item_view, name='insert-item'),
     path('load-data/', load_excel, name='load_excel'),
     path('search/', elastic_search, name='search'),
+    path('list-search/', list_search, name='list_search'),
     path('index-data/', index_documents_opensearch, name='index-documents'),
 ]
