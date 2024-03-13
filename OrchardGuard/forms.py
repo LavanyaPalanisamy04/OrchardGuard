@@ -15,5 +15,8 @@ class SearchForm(forms.Form):
 class ListSearchForm(forms.Form):
     acnos = forms.CharField(label='Comma separated Acnos', max_length=100, required=True)
 
+class AnySearchForm(forms.Form):
+    input = forms.CharField(label='Anything to search for', max_length=100, required=True)
+
 
 
