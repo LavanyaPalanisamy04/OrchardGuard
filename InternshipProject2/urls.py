@@ -18,7 +18,11 @@ from django.contrib import admin
 from django.urls import path
 
 from OrchardGuard.views import insert_item_view, load_excel, search, index_documents_opensearch, elastic_search, \
+
     list_search
+
+    list_search, any_search
+origin/search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +30,8 @@ urlpatterns = [
     path('load-data/', load_excel, name='load_excel'),
     path('search/', elastic_search, name='search'),
     path('list-search/', list_search, name='list_search'),
+
+    path('any-search/', any_search, name='any_search'),
+ origin/search
     path('index-data/', index_documents_opensearch, name='index-documents'),
 ]

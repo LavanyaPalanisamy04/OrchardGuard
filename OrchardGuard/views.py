@@ -4,7 +4,11 @@ import requests
 
 import boto3
 from django.shortcuts import render
+<<<<<<< HEAD
 from .forms import SearchForm, ListSearchForm
+=======
+from .forms import SearchForm, ListSearchForm, AnySearchForm
+>>>>>>> origin/search
 
 from django.shortcuts import render
 
@@ -184,6 +188,41 @@ def list_search(request):
         form = ListSearchForm()
     return render(request, 'OrchardGuard/search.html', {'form': form})
 
+
+def any_search(request):
+    if request.method == 'POST':
+        form = AnySearchForm(request.POST)
+        if form.is_valid():
+
+            input = form.cleaned_data['input']
+
+            # Now you can process the acnos data as needed
+            query = {
+                "query": {
+                    "query_string": {
+                        "query": input
+                    }
+                }
+            }
+            response = requests.post(
+                'https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com/_search',
+                auth=('Lavanya', 'Orchardguard@04'),
+                json=query)
+
+            print(query)
+
+            # Extract search results
+            items = []
+            for record in response.json()['hits']['hits']:
+                items.append(record['_source'])
+
+            print("items ", items)
+            return render(request, 'OrchardGuard/search_results.html', {'items': items})
+    else:
+        form = AnySearchForm()
+    return render(request, 'OrchardGuard/search.html', {'form': form})
+
+     origin/search
 
 
 def elastic_search(request):

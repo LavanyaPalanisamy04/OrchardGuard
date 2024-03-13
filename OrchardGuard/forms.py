@@ -19,4 +19,9 @@ class ListSearchForm(forms.Form):
 
 
 
+class AnySearchForm(forms.Form):
+    input = forms.CharField(label='Anything to search for', max_length=100, required=True)
+    origin/search
+
+
 

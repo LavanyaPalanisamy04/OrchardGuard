@@ -1,0 +1,16 @@
+<!-- feedback.html -->
+<section id="contact">
+    <div class="contact container">
+        <div>
+            <h1 class="section-title">Contact <span>info</span></h1>
+        </div>
+        <div class="contact-items">
+            <!-- Feedback Form -->
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+</section>
