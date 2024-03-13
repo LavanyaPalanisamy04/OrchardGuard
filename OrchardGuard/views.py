@@ -4,7 +4,7 @@ import requests
 
 import boto3
 from django.shortcuts import render
-from .forms import SearchForm
+from .forms import SearchForm, ListSearchForm
 
 from django.shortcuts import render
 
@@ -149,6 +149,41 @@ def search(request):
         form = SearchForm()
     return render(request, 'OrchardGuard/search.html', {'form': form})
 
+def list_search(request):
+    if request.method == 'POST':
+        form = ListSearchForm(request.POST)
+        if form.is_valid():
+
+            acnos = form.cleaned_data['acnos']
+
+            # Now you can process the acnos data as needed
+            query = {
+                "query": {
+                    "terms": {
+                        "acno": [int(acno.strip()) for acno in acnos.split(',')]
+                    }
+                }
+            }
+            # acno_list = [int(acno.strip()) for acno in acnos.split(',')]
+            # query["query"]["terms"]["acno"].append(acno_list)
+            response = requests.post(
+                'https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com/_search',
+                auth=('Lavanya', 'Orchardguard@04'),
+                json=query)
+
+            print(query)
+
+            # Extract search results
+            items = []
+            for record in response.json()['hits']['hits']:
+                items.append(record['_source'])
+
+            print("items ", items)
+            return render(request, 'OrchardGuard/search_results.html', {'items': items})
+    else:
+        form = ListSearchForm()
+    return render(request, 'OrchardGuard/search.html', {'form': form})
+
 
 
 def elastic_search(request):
@@ -176,7 +211,9 @@ def elastic_search(request):
                 json=query)
 
             # Extract search results
-            items = response.json()['hits']['hits']
+            items = []
+            for record in response.json()['hits']['hits']:
+                items.append(record['_source'])
 
             print("items ",items)
 
