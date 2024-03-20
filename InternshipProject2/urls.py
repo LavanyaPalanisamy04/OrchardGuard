@@ -16,13 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
+# from InternshipProject2 import settings
 
-from OrchardGuard.views import insert_item_view, load_excel, search, index_documents_opensearch, elastic_search, \
-
-    list_search
-
-    list_search, any_search
-origin/search
+from OrchardGuard.views import insert_item_view, load_excel, search, index_documents_opensearch, elastic_search,  list_search, any_search,upload_and_predict,homepage,feedback,information_page,login_or_register
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +30,15 @@ urlpatterns = [
     path('list-search/', list_search, name='list_search'),
 
     path('any-search/', any_search, name='any_search'),
- origin/search
+    path('feedback/', feedback, name='feedback'),
+
     path('index-data/', index_documents_opensearch, name='index-documents'),
+    path('homepage/image_recognition/', upload_and_predict, name='upload_and_predict'),
+    path('homepage/', homepage, name='homepage'),
+    path('infohub/', information_page, name='infohub'),
+    path('login/', login_or_register, name='login')
+
+
+
 ]
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

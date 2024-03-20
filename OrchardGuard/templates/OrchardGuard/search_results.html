@@ -1,37 +1,287 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results</title>
-</head>
-<body>
-    <h1>Search Results</h1>
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Search Results</title>#}
+{#</head>#}
+{#<body>#}
+{#    <h1>Search Results</h1>#}
+{##}
+{#    {% if items %}#}
+{#        <ul>#}
+{#            {% for item in items %}#}
+{#                <li>#}
+{#                    <ul>#}
+{#                        {% for key, value in item.items %}#}
+{#                            <li><strong>{{ key }}:</strong> {{ value }}</li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#    {% else %}#}
+{#        <p>No items found.</p>#}
+{#    {% endif %}#}
+{#</body>#}
+{#</html>#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Search Results</title>#}
+{#    <style>#}
+{#        table {#}
+{#            border-collapse: collapse;#}
+{#            width: 100%;#}
+{#        }#}
+{#        th, td {#}
+{#            border: 1px solid #dddddd;#}
+{#            text-align: left;#}
+{#            padding: 8px;#}
+{#        }#}
+{#        th {#}
+{#            background-color: #f2f2f2;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#    <h1>Search Results</h1>#}
+{##}
+{#    {% if items %}#}
+{#        <table>#}
+{#            <thead>#}
+{#                <tr>#}
+{#                    <th>Acno</th>#}
+{#                    <th>Accession</th>#}
+{#                     <th>Cultivar Name</th>#}
+{#                    <th>Country</th>#}
+{#                    <th>Province</th>#}
+{#                    <th>City</th>#}
+{#                    <th>Pedigree</th>#}
+{#                    <th>Genus</th>#}
+{#                    <th>Species</th>#}
+{#                    <th>Breeder</th>#}
+{#                </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#                {% for item in items %}#}
+{#                    <tr>#}
+{#                        <td>{{ item.acno }}</td>#}
+{#                        <td>{{ item.accession }}</td>#}
+{#                        <td>{{ item.cultivar_name }}</td>#}
+{#                        <td>{{ item.origin_country }}</td>#}
+{#                        <td>{{ item.origin_province }}</td>#}
+{#                        <td>{{ item.origin_city }}</td>#}
+{#                        <td>{{ item.e_pedigree }}</td>#}
+{#                        <td>{{ item.e_genus}}</td>#}
+{#                       <td>{{ item.e_species}}</td>#}
+{#                       <td>{{ item.breeder}}</td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#            </tbody>#}
+{#        </table>#}
+{#    {% else %}#}
+{#        <p>No items found.</p>#}
+{#    {% endif %}#}
+{#</body>#}
+{#</html>#}
+{% extends "OrchardGuard/common.html" %}
+{% block title %}
+
+{% endblock %}
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif; /* Use a modern font-family */
+    }
+     .hbar1{
+         margin-top: 1em; /* Ensure enough space from the top of the page or navbar */
+        text-align: center; /* Center the title */
+        font-size: 2em; /* Make the title larger */
+        color: crimson;
+
+    }
+
+    h1 {
+        margin-top: 1em; /* Ensure enough space from the top of the page or navbar */
+        text-align: center; /* Center the title */
+        font-size: 2em; /* Make the title larger */
+        color: crimson;
+        /* Branding color for the title */
+    }
+
+    table {
+    width: 100%; /* Full-width table */
+    border-collapse: collapse; /* Collapse borders */
+    margin: 10em 0; /* Increase the top margin to create more space between the header and the table */
+    height: 10px;
+
+    /* Space above and below the table */
+}
+{#  .table-container {#}
+{#    height: 400px;#}
+{#      position: fixed;/* Adjust the height as needed */#}
+{##}
+
+
+
+    th, td {
+        padding: 12px 15px; /* Larger padding for a better visual appearance */
+        text-align: left; /* Left align text */
+        border-bottom: 1px solid #ddd;
+        font-size: 1.7em; /* Borders for separation */
+    }
+
+    th {
+        background-color:crimson; /* Branding color for headers */
+        color: white; /* White text for headers */
+        font-size: 2.1em; /* Slightly larger font size for headers */
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2; /* Light gray for even rows */
+    }
+
+    tr:hover {
+        background-color: #cce6ff; /* Light blue for hover effect */
+        cursor: pointer; /* Change cursor to indicate interactivity */
+    }
+
+    /* Responsive table */
+    @media screen and (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+        table caption {
+            font-size: 1.3em;
+        }
+
+        table, thead, tbody, th, td, tr {
+            display: block;
+            font-size: 1.3em;
+        }
+
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        tr { border: 1px solid #ccc;
+         }
+
+        td {
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 50%;
+        }
+
+        td:before {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+            content: attr(data-label);
+            color: #004890;
+            font-weight: bold;
+        }
+    }
+</style>
+
+
+
+
+{#<section id="header">#}
+{#  <div class="header container">#}
+{#    <div class="nav-bar">#}
+{#      <div class="brand">#}
+{#        <a href="#hero">#}
+{#          <h1><span>O</span>rchard <span>G</span>Uard</h1>#}
+{#        </a>#}
+{#      </div>#}
+{##}
+{#      <div class="nav-list">#}
+{#        <div class="hamburger">#}
+{#          <div class="bar"></div>#}
+{#        </div>#}
+{#        <ul>#}
+{#          <li><a href="#hero" data-after="Home">Home</a></li>#}
+{#          <li><a href="#services" data-after="Service">AboutUs</a></li>#}
+{#          <li><a href="#contact" data-after="Projects">Contactus</a></li>#}
+{#          <li><a href="Signup.html">Signup</a></li>#}
+{#          <li><a href="login.html" >Login</a></li>#}
+{#        </ul>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</section>#}
+<section id ="table">
+{#    <hbar1>Search Results</hbar1>#}
+<div class="table-container">
 
     {% if items %}
-        <ul>
-            {% for item in items %}
-                <li>
-                    <ul>
-                        {% for key, value in item.items %}
-                            <li><strong>{{ key }}:</strong> {{ value }}</li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-        </ul>
+    <table>
+        <thead>
+        <tr>
+            <th>Acno</th>
+            <th>Accession</th>
+            <th>Cultivar Name</th>
+            <th>Country</th>
+            <th>Province</th>
+            <th>City</th>
+            <th>Pedigree</th>
+            <th>Genus</th>
+            <th>Species</th>
+            <th>Breeder</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+        <tr>
+            <td data-label="Acno">{{ item.acno }}</td>
+            <td data-label="Accession">{{ item.accession }}</td>
+            <td data-label="Cultivar Name">{{ item.cultivar_name }}</td>
+            <td data-label="Country">{{ item.origin_country }}</td>
+            <td data-label="Province">{{ item.origin_province }}</td>
+            <td data-label="City">{{ item.origin_city }}</td>
+            <td data-label="Pedigree">{{ item.e_pedigree }}</td>
+            <td data-label="Genus">{{ item.e_genus }}</td>
+            <td data-label="Species">{{ item.e_species }}</td>
+            <td data-label="Breeder">{{ item.breeder }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     {% else %}
-        <p>No items found.</p>
+    <p>No items found.</p>
     {% endif %}
-</body>
-</html>
+</div>
+</section>
 
-
-
-
-
-
-
-
-
-
+{% endblock %}

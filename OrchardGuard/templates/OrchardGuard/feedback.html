@@ -1,16 +1,37 @@
-<!-- feedback.html -->
-<section id="contact">
-    <div class="contact container">
-        <div>
-            <h1 class="section-title">Contact <span>info</span></h1>
-        </div>
-        <div class="contact-items">
-            <!-- Feedback Form -->
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Submit Feedback</button>
-            </form>
-        </div>
+{% extends "OrchardGuard/base.html" %}
+
+{% block title %}
+Feedback Form
+{% endblock %}
+
+{% block content %}
+
+<!-- Feedback Form Section -->
+<section id="feedback">
+  <div class="feedback container">
+    <div>
+      <h1 class="section-title">Feedback <span>Form</span></h1>
     </div>
+    <form action="/submit-feedback" method="post" class="feedback-form">
+      <table class="feedback-table">
+        <tr>
+          <td><label for="name">Name:</label></td>
+          <td><input type="text" id="name" name="name" required></td>
+        </tr>
+        <tr>
+          <td><label for="email">Email:</label></td>
+          <td><input type="email" id="email" name="email" required></td>
+        </tr>
+        <tr>
+          <td><label for="message">Message:</label></td>
+          <td><textarea id="message" name="message" rows="4" required></textarea></td>
+        </tr>
+      </table>
+      <button type="submit">Submit Feedback</button>
+    </form>
+  </div>
 </section>
+<!-- End Feedback Form Section -->
+
+
+{% endblock %}

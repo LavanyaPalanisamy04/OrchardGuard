@@ -21,7 +21,20 @@ class ListSearchForm(forms.Form):
 
 class AnySearchForm(forms.Form):
     input = forms.CharField(label='Anything to search for', max_length=100, required=True)
-    origin/search
 
+
+class ImageUploadForm(forms.Form):
+    image = forms.ImageField()
+
+
+class LoginForm(forms.Form):
+    username_or_email = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+class RegistrationForm(forms.Form):
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
 

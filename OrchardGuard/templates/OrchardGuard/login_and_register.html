@@ -1,25 +1,29 @@
+{% extends "OrchardGuard/common.html" %}
 {% load static %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'OrchardGuard/regstyle.css' %}">
-    <title>Ludiflex | Login</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{#    <link rel="stylesheet" href="Orch/regstyle.css">#}
+     <link rel="stylesheet" href="{% static 'OrchardGuard/regstyle.css' %}">
+    <title>Ludiflex | Login & Registration</title>
 </head>
 <body>
     <video id="hero-video" autoplay muted loop>
-        <source src="/OrchardGuard/videos/pexels_videos_2351184 (1080p).mp4" type="video/mp4">
+        <source src="{% static 'OrchardGuard/videos/home.mp4' %}" type="video/mp4">
         <!-- Add additional source elements for other video formats if needed -->
         Your browser does not support the video tag.
       </video>
  <div class="wrapper">
-    <nav class="nav">
-        <div class="nav-logo">
-           <a href = "homepage.html" ><p>Orchard Guard</p></a>
-        </div>
-
+{#    <nav class="nav">#}
+{#        <div class="nav-logo">#}
+{#           <a href = "homepage.html" ><p>Orchard Guard</p></a>#}
+{#        </div>#}
+{#    </nav>#}
         <!-- <div class="nav-menu" id="navMenu">
             <ul>
                 <li><a href="#" class="link active">Home</a></li>
@@ -28,14 +32,14 @@
                 <li><a href="#" class="link">About</a></li>
             </ul>
         </div> -->
-        <div class="nav-button">
-            <button class="btn white-btn" id="loginBtn" onclick="login()">Sign In</button>
-            <button class="btn" id="registerBtn" onclick="register()">Sign Up</button>
-        </div>
-        <div class="nav-menu-btn">
-            <i class="bx bx-menu" onclick="myMenuFunction()"></i>
-        </div>
-    </nav>
+{#        <div class="nav-button">#}
+{#            <button class="btn white-btn" id="loginBtn" onclick="login()">Sign In</button>#}
+{#            <button class="btn" id="registerBtn" onclick="register()">Sign Up</button>#}
+{#        </div>#}
+{#        <div class="nav-menu-btn">#}
+{#            <i class="bx bx-menu" onclick="myMenuFunction()"></i>#}
+{#        </div>#}
+{#    </nav>#}
 
 <!----------------------------- Form box ----------------------------------->
     <div class="form-box">
@@ -154,6 +158,6 @@
 
 </script>
 
-    <!-- Your existing login HTML content goes here -->
 </body>
 </html>
+{% endblock %}

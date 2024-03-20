@@ -1,0 +1,147 @@
+{% extends "OrchardGuard/common.html" %}
+
+{% block content %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4C0000;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: crimson;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4C0000;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 10px);
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: crimson;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: crimson;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Information</h1>
+        <ul>
+            <li><a href="#" id="any-search-link">Any Search</a></li>
+            <li><a href="#" id="search-link">Search</a></li>
+            <li><a href="#" id="list-search-link">List Search</a></li>
+        </ul>
+
+        <!-- Any Search Form -->
+        <div id="any-search-form" class="form-container hidden">
+            <h2>Any Search Form</h2>
+            <form method="post" action="{% url 'any_search' %}">
+                {% csrf_token %}
+                {{ any_search_form.as_p }}
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Search Form -->
+        <div id="search-form" class="form-container hidden">
+            <h2>Search Form</h2>
+            <form method="post" action="{% url 'search' %}">
+                {% csrf_token %}
+                {{ search_form.as_p }}
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- List Search Form -->
+        <div id="list-search-form" class="form-container hidden">
+            <h2>List Search Form</h2>
+            <form method="post" action="{% url 'list_search' %}">
+                {% csrf_token %}
+                {{ list_search_form.as_p }}
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to toggle form visibility
+        document.getElementById('any-search-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('any-search-form').classList.toggle('hidden');
+        });
+
+        document.getElementById('search-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('search-form').classList.toggle('hidden');
+        });
+
+        document.getElementById('list-search-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('list-search-form').classList.toggle('hidden');
+        });
+    </script>
+{% endblock %}

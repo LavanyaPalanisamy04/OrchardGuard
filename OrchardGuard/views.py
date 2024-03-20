@@ -3,23 +3,32 @@ import json
 import requests
 
 import boto3
-from django.shortcuts import render
-<<<<<<< HEAD
-from .forms import SearchForm, ListSearchForm
-=======
-from .forms import SearchForm, ListSearchForm, AnySearchForm
->>>>>>> origin/search
+from django.shortcuts import render,redirect
 
-from django.shortcuts import render
+
+
+from .forms import SearchForm, ListSearchForm, AnySearchForm, ImageUploadForm
+
+
 
 # Create your views here.
-from django.http import JsonResponse
+
 
 from OrchardGuard.dynamodb import insert_item_into_dynamodb, insert_data_into_dynamodb, query, query_by_partition_key, \
     scan_table
 
 from elasticsearch import Elasticsearch
-from django.shortcuts import render
+
+from .forms import LoginForm, RegistrationForm
+
+
+
+
+
+
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.http import HttpResponse, JsonResponse
 from .forms import SearchForm  # Import your SearchForm
 
 # Define Elasticsearch client
@@ -222,7 +231,7 @@ def any_search(request):
         form = AnySearchForm()
     return render(request, 'OrchardGuard/search.html', {'form': form})
 
-     origin/search
+
 
 
 def elastic_search(request):
@@ -264,3 +273,76 @@ def elastic_search(request):
 
 
 
+def upload_and_predict(request):
+    if request.method == 'POST':
+        if 'image_file' not in request.FILES:
+            return JsonResponse({'error': 'No image file provided.'}, status=400)
+
+        image_file = request.FILES['image_file']
+        temp_image = default_storage.save("temp_image", ContentFile(image_file.read()))
+        temp_image_path = default_storage.path(temp_image)
+
+        try:
+            with open(temp_image_path, 'rb') as file:
+                fastapi_url = 'http://localhost:8081/prediction'
+                response = requests.post(fastapi_url, files={'file': file})
+
+            # Ensure you delete the temp file after closing it
+            default_storage.delete(temp_image)
+
+            if response.status_code == 200:
+                prediction = response.json()
+                return JsonResponse({
+                    'class': prediction.get('class', 'N/A'),
+                    'confidence': prediction.get('confidence', 0)
+                })
+            else:
+                return JsonResponse({'error': 'Failed to get prediction from FastAPI.'}, status=response.status_code)
+        except Exception as e:
+            # If an error occurs, delete the temp file
+            default_storage.delete(temp_image)
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return render(request, 'OrchardGuard/image_recognition.html')
+
+
+
+
+def homepage(request):
+    return render(request, 'OrchardGuard/homepage.html')
+
+def feedback(request):
+    return render(request, 'OrchardGuard/feedback.html')
+
+
+def information_page(request):
+    any_search_form = AnySearchForm()
+    search_form = SearchForm()
+    list_search_form = ListSearchForm()
+
+    return render(request, 'OrchardGuard/infohub.html', {
+        'any_search_form': any_search_form,
+        'search_form': search_form,
+        'list_search_form': list_search_form
+    })
+
+def login_or_register(request):
+    login_form = LoginForm()
+    register_form = RegistrationForm()
+    if request.method == 'POST':
+        if 'login_submit' in request.POST:
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                # Perform login logic here
+                return redirect('homepage')  # Redirect to homepage after successful login
+        elif 'register_submit' in request.POST:
+            register_form = RegistrationForm(request.POST)
+            if register_form.is_valid():
+                # Perform registration logic here
+                # For example:
+                # first_name = register_form.cleaned_data['first_name']
+                # last_name = register_form.cleaned_data['last_name']
+                # email = register_form.cleaned_data['email']
+                # password = register_form.cleaned_data['password']
+                return redirect('login_or_register')  # Redirect to login page after successful registration
+    return render(request, 'OrchardGuard/login_and_register.html', {'login_form': login_form, 'register_form': register_form})
