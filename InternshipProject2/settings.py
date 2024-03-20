@@ -127,3 +127,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AWS_ACCESS_KEY_ID = 'AKIAW3MEBAIAUAP33M3V'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_DEFAULT_REGION = 'us-east-2'
+
+AWS_ELASTICSEARCH_URL = 'https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com/_search'
+AWS_ELASTICSEARCH_USERNAME = 'Lavanya'
+AWS_ELASTICSEARCH_PASSWORD = 'Orchardguard@04'

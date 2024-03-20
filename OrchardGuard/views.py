@@ -3,7 +3,9 @@ import json
 import requests
 
 import boto3
+from django.conf import settings
 from django.shortcuts import render
+
 from .forms import SearchForm, ListSearchForm, AnySearchForm
 
 from django.shortcuts import render
@@ -24,6 +26,9 @@ es = Elasticsearch(hosts=['https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2
                    headers={"Content-Type": "application/json"}
                    )
 
+AWS_ELASTICSEARCH_URL = settings.AWS_ELASTICSEARCH_URL
+AWS_ELASTICSEARCH_USERNAME = settings.AWS_ELASTICSEARCH_USERNAME
+AWS_ELASTICSEARCH_PASSWORD = settings.AWS_ELASTICSEARCH_PASSWORD
 
 
 def insert_item_view(request):
@@ -47,6 +52,7 @@ def insert_item_view(request):
     else:
         return JsonResponse({'status': 'Failed to insert item'})
 
+
 def convert_value(value, datatype):
     """Converts a value to the specified datatype."""
     if datatype == 'N':
@@ -54,6 +60,7 @@ def convert_value(value, datatype):
         return str(int(value)) if value.isdigit() else str(float(value))
     # For simplicity, return all other datatypes as strings
     return value
+
 
 def load_excel(request):
     """
@@ -71,7 +78,6 @@ def load_excel(request):
             data.append(row)
 
     response = insert_data_into_dynamodb(data)
-
 
     if response:
         return JsonResponse({'status': 'data loaded successfully'})
@@ -138,7 +144,7 @@ def search(request):
             filter_expression = ' AND '.join(filter_expression_parts)
 
             # Query the DynamoDB table
-            response = scan_table(filter_expression,expression_attribute_names,expression_attribute_values)
+            response = scan_table(filter_expression, expression_attribute_names, expression_attribute_values)
 
             # Process search results
             items = response['Items']
@@ -148,6 +154,7 @@ def search(request):
     else:
         form = SearchForm()
     return render(request, 'OrchardGuard/search.html', {'form': form})
+
 
 def list_search(request):
     if request.method == 'POST':
@@ -164,11 +171,9 @@ def list_search(request):
                     }
                 }
             }
-            # acno_list = [int(acno.strip()) for acno in acnos.split(',')]
-            # query["query"]["terms"]["acno"].append(acno_list)
             response = requests.post(
-                'https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com/_search',
-                auth=('Lavanya', 'Orchardguard@04'),
+                AWS_ELASTICSEARCH_URL,
+                auth=(AWS_ELASTICSEARCH_USERNAME, AWS_ELASTICSEARCH_PASSWORD),
                 json=query)
 
             print(query)
@@ -183,6 +188,7 @@ def list_search(request):
     else:
         form = ListSearchForm()
     return render(request, 'OrchardGuard/search.html', {'form': form})
+
 
 def any_search(request):
     if request.method == 'POST':
@@ -200,8 +206,8 @@ def any_search(request):
                 }
             }
             response = requests.post(
-                'https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com/_search',
-                auth=('Lavanya', 'Orchardguard@04'),
+                AWS_ELASTICSEARCH_URL,
+                auth=(AWS_ELASTICSEARCH_USERNAME, AWS_ELASTICSEARCH_PASSWORD),
                 json=query)
 
             print(query)
@@ -218,7 +224,6 @@ def any_search(request):
     return render(request, 'OrchardGuard/search.html', {'form': form})
 
 
-
 def elastic_search(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
@@ -227,7 +232,7 @@ def elastic_search(request):
             query = {
                 "query": {
                     "bool": {
-                        "must": []
+                        "should": []
                     }
                 }
             }
@@ -235,12 +240,12 @@ def elastic_search(request):
             # Add search terms from the form fields
             for field, value in form.cleaned_data.items():
                 if value:
-                    query["query"]["bool"]["must"].append({"match": {field: value}})
+                    query["query"]["bool"]["should"].append({"match": {field: value}})
 
                     # Make a POST request to Elasticsearch
             response = requests.post(
-                'https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com/_search',
-                auth=('Lavanya', 'Orchardguard@04'),
+                AWS_ELASTICSEARCH_URL,
+                auth=(AWS_ELASTICSEARCH_USERNAME, AWS_ELASTICSEARCH_PASSWORD),
                 json=query)
 
             # Extract search results
@@ -248,13 +253,11 @@ def elastic_search(request):
             for record in response.json()['hits']['hits']:
                 items.append(record['_source'])
 
-            print("items ",items)
+            print("query: ", query)
+            print("items ", items)
 
             # Render the search results in the template
             return render(request, 'OrchardGuard/search_results.html', {'items': items})
     else:
         form = SearchForm()
     return render(request, 'OrchardGuard/search.html', {'form': form})
-
-
-
