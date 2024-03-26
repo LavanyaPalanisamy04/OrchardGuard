@@ -28,6 +28,7 @@ COLUMN_HEADER = ['Acno', 'Accession', 'Cultivar Name', 'Country', 'Province', 'C
                  'breeder']
 
 REPORT_HEADING = 'Apple Accessions Report'
+EXPORT_FILENAME = "Accessions Search Report"
 
 
 # add documents to opensearch domain
@@ -169,7 +170,7 @@ def wrap_text(text, char_limit):
 
 def export_pdf(items_list):
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="exported_data.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="{EXPORT_FILENAME}.pdf"'
 
     doc = SimpleDocTemplate(response, pagesize=letter)
     elements = []  # List to hold elements to add to the document
@@ -250,7 +251,7 @@ def export_word(items_list):
 
     # Prepare the response
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = 'attachment; filename="exported_data.docx"'
+    response['Content-Disposition'] = f'attachment; filename="{EXPORT_FILENAME}.docx"'
 
     # Save the document to the HttpResponse
     doc.save(response)
@@ -274,7 +275,7 @@ def export_csv(request):
             if export_option == 'csv':
                 # Export as CSV with selected columns
                 response = HttpResponse(content_type='text/csv')
-                response['Content-Disposition'] = 'attachment; filename="exported_data.csv"'
+                response['Content-Disposition'] = f'attachment; filename="{EXPORT_FILENAME}.csv"'
 
                 csv_writer = csv.DictWriter(response, fieldnames=COLUMNS_TO_EXPORT)
                 csv_writer.writeheader()
