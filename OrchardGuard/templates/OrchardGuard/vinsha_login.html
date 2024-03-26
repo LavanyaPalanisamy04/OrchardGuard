@@ -13,6 +13,7 @@
     <title>Ludiflex | Login & Registration</title>
 </head>
 <body>
+{% block sidebar %}{% endblock %}
     <video id="hero-video" autoplay muted loop>
         <source src="{% static 'OrchardGuard/videos/home.mp4' %}" type="video/mp4">
         <!-- Add additional source elements for other video formats if needed -->
@@ -49,7 +50,7 @@
         <div class="login-container" id="login">
 
             <div class="top">
-                <span>Don't have an account? <a href="#" onclick="register()">Sign Up</a></span>
+                <span>Don't have an account? <a {% url '' %}>Sign Up</a></span>
                 <header>Login</header>
             </div>
             <div class="input-box">
@@ -75,32 +76,7 @@
         </div>
 
         <!------------------- registration form -------------------------->
-        <div class="register-container" id="register">
-            <div class="top">
-                <span>Have an account? <a href="#" onclick="login()">Login</a></span>
-                <header>Sign Up</header>
-            </div>
-            <div class="two-forms">
-                <div class="input-box">
-                    <input type="text" class="input-field" placeholder="Firstname">
-                    <i class="bx bx-user"></i>
-                </div>
-                <div class="input-box">
-                    <input type="text" class="input-field" placeholder="Lastname">
-                    <i class="bx bx-user"></i>
-                </div>
-            </div>
-            <div class="input-box">
-                <input type="text" class="input-field" placeholder="Email">
-                <i class="bx bx-envelope"></i>
-            </div>
-            <div class="input-box">
-                <input type="password" class="input-field" placeholder="Password">
-                <i class="bx bx-lock-alt"></i>
-            </div>
-            <div class="input-box">
-                <input type="submit" class="submit" value="Register">
-            </div>
+
             <div class="two-col">
                 <div class="one">
                     <input type="checkbox" id="register-check">
@@ -113,6 +89,52 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function togglePasswordVisibility(toggleId, toggleIcon) {
+    const input = document.querySelector(toggleId);
+    if (input.type === "password") {
+        input.type = "text";
+        toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        input.type = "password";
+        toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+$(document).ready(function() {
+    $('#password').on('keyup', function() {
+        var password = $(this).val();
+
+        $('#length').toggleClass('invalid', !(password.length >= 8));
+        $('#length').toggleClass('valid', password.length >= 8);
+
+        $('#uppercase').toggleClass('invalid', !(/[A-Z]/.test(password)));
+        $('#uppercase').toggleClass('valid', (/[A-Z]/.test(password)));
+
+        $('#lowercase').toggleClass('invalid', !(/[a-z]/.test(password)));
+        $('#lowercase').toggleClass('valid', (/[a-z]/.test(password)));
+
+        $('#number').toggleClass('invalid', !(/\d/.test(password)));
+        $('#number').toggleClass('valid', (/\d/.test(password)));
+
+        $('#special').toggleClass('invalid', !(/[^\w\s]/.test(password)));
+        $('#special').toggleClass('valid', (/[^\w\s]/.test(password)));
+    });
+
+    // Form submission
+    $('#signupForm').on('submit', function(e) {
+        var password = $('#password').val();
+        var confirm_password = $('#confirm_password').val();
+
+        if (password !== confirm_password) {
+            e.preventDefault(); // Prevent form submission
+            alert('Passwords do not match!');
+        }
+    });
+});
+</script>
 
 
 <script>

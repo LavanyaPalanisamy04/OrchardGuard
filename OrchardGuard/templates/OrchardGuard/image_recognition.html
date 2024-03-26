@@ -250,28 +250,46 @@
 {#</html>#}
 
 
-{#{% extends "OrchardGuard/common.html" %}#}
+{% extends "OrchardGuard/common.html" %}
 
+{% load static %}
 {% block content %}
-<style>
-   .container {
-       background-color: #651707;
-        display: flex;
-        justify-content: center; /* Center items horizontally */
-        align-items: center; /* Center items vertically */
-        height: 100vh; /* Make the container full height of the viewport */
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{#     <link rel="stylesheet" href="{% static 'OrchardGuard/predictstyle.css' %}">#}
+    <title>Image Recognition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+            .infocontainer {
+
+         position: relative; /* Set the position to relative */
+    z-index: 1; /* Set a higher z-index to ensure it appears above other elements */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding-top: 60px;
     }
+
 
     .image-container {
-        width: 45%; /* Adjusted width for better visibility */
-        background-color: rgba(255, 255, 255, 0.9); /* Slightly more opaque for readability */
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-        transition: all 0.3s ease; /* Smooth transition for all animatable properties */
-        font-size: 15px;
-        text-align: center; /* Center text horizontally */
-    }
+    position: relative; /* Set the position to relative */
+    z-index: 2; /* Set a higher z-index */
+    margin-top: 100px;
+    margin-left: 10px;
+    width: 45%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    font-size: 15px;
+    text-align: center;
+}
 
     h1,
     h2,
@@ -314,29 +332,43 @@
         background-color: #45a049; /* Darker green */
     }
 
-    .disease-info {
-        background-color: #f9f9f9; /* Light gray background */
-        padding: 20px;
-        border-radius: 10px;
-        margin-top: 20px; /* Adjust as needed */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    }
+    .result-container {
+    position:relative; /* Set the position to relative */
+    z-index: 2; /* Set a higher z-index */
+    margin-left: 30px;
+    margin-right: 10px;
+    margin-top: 200px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    font-size: 16px;
+    text-align: center;
+}
+.container{
+    padding-bottom: 60px;
+}
 
-    .disease-info h2 {
-        color: #333; /* Dark text color */
-        margin-bottom: 10px; /* Adjust as needed */
-    }
-
-    .disease-info p {
-        color: #666; /* Gray text color */
-    }
     </style>
 
 
 
+</head>
+<body>
+{% block sidelink %}{% endblock %}
+ <video id="hero-video" autoplay muted loop>
+        <source src="{% static 'OrchardGuard/videos/home.mp4' %}" type="video/mp4">
+        <!-- Add additional source elements for other video formats if needed -->
+        Your browser does not support the video tag.
+      </video>
 
 
-    <div class="container">
+
+
+
+
+    <div class="infocontainer">
         <div class="image-container" id="imageContainer">
             <h1>Upload Image for Recognition</h1>
             <form id="uploadForm" enctype="multipart/form-data">
@@ -350,10 +382,13 @@
                 <div id="preview"></div>
             </div>
         </div>
-        <div class="info-container" id="disease-info-container"></div>
-        <div class="disease-info" id="disease-info"></div> <!-- Disease information container -->
+         <div class="result-container" id="resultContainer" style="display: none;">
+           <div class="info-container" id="disease-info-container"></div>
+            <div class="disease-info" id="disease-info"></div> <!-- Disease information container -->
+         </div>
     </div>
     </div>
+
 
     <script>
           document.getElementById('uploadForm').addEventListener('submit', function(e) {
@@ -444,13 +479,14 @@
                 content = `<h2>Prediction</h2>
                             <p>The uploaded image shows that you're plant is ${response.class}</p>`;
             }
-               const diseaseInfoContainer = document.getElementById('disease-info');
-                diseaseInfoContainer.innerHTML = content;
-                document.getElementById('disease-info-container').style.display = 'block'; // Show the info container
+              const diseaseInfoContainer = document.getElementById('resultContainer');
+               resultContainer.innerHTML = content;
+            resultContainer.style.display = 'block'; // Show the info container
             } else {
-                const diseaseInfoContainer = document.getElementById('disease-info');
-                diseaseInfoContainer.innerHTML = '<p>Failed to get prediction from FastAPI.</p>';
-                document.getElementById('disease-info-container').style.display = 'block'; // Show the info container
+                // Handle errors or unsuccessful responses
+                const diseaseInfoContainer = document.getElementById('resultContainer');
+                 resultContainer.innerHTML = '<p>Failed to get prediction from FastAPI.</p>';
+            resultContainer.style.display = 'block';
             }
         };
 
@@ -460,6 +496,7 @@ const fileInput = document.getElementById('fileInput');
 const previewContainer = document.getElementById('preview-container');
 const preview = document.getElementById('preview');
 const imageContainer = document.getElementById('imageContainer');
+const resultContainer = document.getElementById('resultContainer'); // Correct ID for the result container
 
 fileInput.addEventListener('change', function() {
     const file = this.files[0];
@@ -477,5 +514,7 @@ fileInput.addEventListener('change', function() {
     }
 });
     </script>
-{% endblock %}
+</body>
+</html>
 
+{% endblock %}

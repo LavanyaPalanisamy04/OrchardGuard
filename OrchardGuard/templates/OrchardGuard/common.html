@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static 'OrchardGuard/common.css' %}">
+  <link rel="stylesheet" href="{% static 'OrchardGuard/styling.css' %}">
   <title>My Website</title>
 </head>
 
@@ -26,13 +26,15 @@
             <div class="bar"></div>
           </div>
           <ul>
-            <li><a href="#hero" data-after="Home">Home</a></li>
-            <li><a href="#services" data-after="Service">AboutUs</a></li>
-            <li><a href="#contact" data-after="Projects">Contactus</a></li>
+            <li><a href="{% url 'homepage' %}">Home</a></li>
+            <li><a href="#services" data-after="Service">About Us</a></li>
+            <li><a href="#contact" data-after="Projects">Contact us</a></li>
             <li><a href="{% url 'upload_and_predict' %}">Predict</a></li>
                <li><a href="{% url 'infohub' %}">Infohub</a></li>
-{#             <li><a href="Signup.html">Signup</a></li>#}
-{#            <li><a href="login.html" >Login</a></li>#}
+{#             <li><a href="{% url 'login' %}">Get Started</a></li>#}
+               {%block sidebar%} <li><a href="{% url 'logout' %}">Logout</a></li>{% endblock %}
+        {% block sidelink%}  <li><a href="{% url 'login' %}">Get Started</a></li>{% endblock %}
+{#            <li><a href="vinsha_login.html" >Login</a></li>#}
 
 
                       </ul>
@@ -45,7 +47,8 @@
 
   <!-- End Header -->
 
-
+{% block content %}
+{% endblock %}
   <!-- Hero Section  -->
 
 
@@ -60,8 +63,7 @@
 
   <!-- End Hero Section  -->
 
-  {% block content %}
-  {% endblock %}
+
 
   <!-- Footer -->
   <section id="footer">
@@ -88,8 +90,18 @@
     </div>
   </section>
   <!-- End Footer -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Hide dropdown menu initially
+  $(".dropdown-menu").hide();
 
-
+  // Toggle dropdown menu on click of "Infohub" link
+  $(".dropdown-toggle").click(function() {
+    $(this).next(".dropdown-menu").slideToggle();
+  });
+});
+</script>
 
   <script >
       const hamburger = document.querySelector('.header .nav-bar .nav-list .hamburger');

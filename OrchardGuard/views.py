@@ -1,35 +1,19 @@
 import csv
 import json
-import requests
-
-import boto3
-from django.shortcuts import render,redirect
-
-
-
-from .forms import SearchForm, ListSearchForm, AnySearchForm, ImageUploadForm
-
-
-
-# Create your views here.
-
-
+from .forms import FeedbackForm, SearchForm, ListSearchForm, AnySearchForm, ImageUploadForm, LoginForm, RegistrationForm
+from django.contrib.auth import logout
 from OrchardGuard.dynamodb import insert_item_into_dynamodb, insert_data_into_dynamodb, query, query_by_partition_key, \
     scan_table
-
 from elasticsearch import Elasticsearch
-
-from .forms import LoginForm, RegistrationForm
-
-
-
-
-
-
+import firebase_admin
+import requests
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from firebase_admin import auth, credentials,db
+import re
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.http import HttpResponse, JsonResponse
-from .forms import SearchForm  # Import your SearchForm
 
 # Define Elasticsearch client
 es = Elasticsearch(hosts=['https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2ce.us-east-2.es.amazonaws.com'],
@@ -37,6 +21,10 @@ es = Elasticsearch(hosts=['https://search-orchard-guard-ow7eqo2vkmw47bwlnbasc6a2
                    headers={"Content-Type": "application/json"}
                    )
 
+cred = credentials.Certificate('D:\\pycharmproject\\djangoProject\\OrchardGuard\\security_key.json')
+default_app = firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://apple-disease-detection-ab165-default-rtdb.firebaseio.com/'
+})
 
 
 def insert_item_view(request):
@@ -312,7 +300,14 @@ def homepage(request):
     return render(request, 'OrchardGuard/homepage.html')
 
 def feedback(request):
-    return render(request, 'OrchardGuard/feedback.html')
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('feedback_success')  # Redirect to a success page after submitting feedback
+    else:
+        form = FeedbackForm()
+    return render(request, 'OrchardGuard/feedback.html', {'form': form})
 
 
 def information_page(request):
@@ -325,24 +320,63 @@ def information_page(request):
         'search_form': search_form,
         'list_search_form': list_search_form
     })
+def login(request):
+    return render(request, 'OrchardGuard/vinsha_login.html')
 
-def login_or_register(request):
-    login_form = LoginForm()
-    register_form = RegistrationForm()
-    if request.method == 'POST':
-        if 'login_submit' in request.POST:
-            login_form = LoginForm(request.POST)
-            if login_form.is_valid():
-                # Perform login logic here
-                return redirect('homepage')  # Redirect to homepage after successful login
-        elif 'register_submit' in request.POST:
-            register_form = RegistrationForm(request.POST)
-            if register_form.is_valid():
-                # Perform registration logic here
-                # For example:
-                # first_name = register_form.cleaned_data['first_name']
-                # last_name = register_form.cleaned_data['last_name']
-                # email = register_form.cleaned_data['email']
-                # password = register_form.cleaned_data['password']
-                return redirect('login_or_register')  # Redirect to login page after successful registration
-    return render(request, 'OrchardGuard/login_and_register.html', {'login_form': login_form, 'register_form': register_form})
+def signup(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        dob = request.POST.get('dob')
+
+        # Basic password validation (enforce this client-side, or use Django's validators)
+        if len(password) < 8 or not re.search("[a-z]", password) or not re.search("[A-Z]", password) or not re.search(
+                "[0-9]", password) or not re.search("[\W_]", password):
+            messages.error(request, "Password does not meet the security requirements.")
+            return render(request, 'OrchardGuard/signup.html')
+
+        try:
+            user = auth.create_user(email=email, password=password)
+            # After the user is created, save the additional information in Realtime Database
+            user_ref = db.reference(f'users/{user.uid}')
+            user_ref.set({
+                'first_name': first_name,
+                'last_name': last_name,
+                'dob': dob
+            })
+            messages.success(request, "Account created successfully")
+            return redirect('login')
+        except Exception as e:
+            messages.error(request, f"Failed to create account: {str(e)}")
+            return render(request, 'OrchardGuard/signup.html')
+    else:
+        return render(request,'OrchardGuard/signup.html')
+
+# def login_or_register(request):
+#     login_form = LoginForm()
+#     register_form = RegistrationForm()
+#     if request.method == 'POST':
+#         if 'login_submit' in request.POST:
+#             login_form = LoginForm(request.POST)
+#             if login_form.is_valid():
+#                 # Perform login logic here
+#                 return redirect('homepage')  # Redirect to homepage after successful login
+#         elif 'register_submit' in request.POST:
+#             register_form = RegistrationForm(request.POST)
+#             if register_form.is_valid():
+#                 # Perform registration logic here
+#                 # For example:
+#                 # first_name = register_form.cleaned_data['first_name']
+#                 # last_name = register_form.cleaned_data['last_name']
+#                 # email = register_form.cleaned_data['email']
+#                 # password = register_form.cleaned_data['password']
+#                 return redirect('login_or_register')  # Redirect to login page after successful registration
+#     return render(request, 'OrchardGuard/vinsha_login.html', {'login_form': login_form, 'register_form': register_form})
+
+
+def logout_view(request):
+    logout(request)
+    # Redirect to a success page.
+    return redirect('homepage')

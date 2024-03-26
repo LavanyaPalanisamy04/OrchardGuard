@@ -101,6 +101,7 @@ body{
     height: 420px;
     overflow: hidden;
     z-index: 2;
+    padding-top: 20px;
 }
 .login-container{
     position: absolute;

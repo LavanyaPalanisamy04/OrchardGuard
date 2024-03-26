@@ -1,37 +1,80 @@
-{% extends "OrchardGuard/base.html" %}
+{% extends 'OrchardGuard/common.html' %}
+{% load static %}
+{% block content%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .feedbackcontainer {
+            width: 60%; /* Increased width */
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2); /* Box shadow */
+        }
+        h2 {
+            text-align: center;
+            color: #333; /* Dark text color */
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555; /* Medium gray text color */
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px; /* Increased spacing */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            background-color: #007bff; /* Blue submit button */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px; /* Increased font size */
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+{% block sidebar %}{% endblock %}
 
-{% block title %}
-Feedback Form
-{% endblock %}
-
-{% block content %}
-
-<!-- Feedback Form Section -->
-<section id="feedback">
-  <div class="feedback container">
-    <div>
-      <h1 class="section-title">Feedback <span>Form</span></h1>
+    <div class="feedbackcontainer">
+        <h2>Feedback Form</h2>
+        <form method="post" action="{% url 'homepage' %}"> <!-- Replace '/submit_feedback/' with your form submission URL -->
+            {% csrf_token %}
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <button type="submit">Submit Feedback</button>
+        </form>
     </div>
-    <form action="/submit-feedback" method="post" class="feedback-form">
-      <table class="feedback-table">
-        <tr>
-          <td><label for="name">Name:</label></td>
-          <td><input type="text" id="name" name="name" required></td>
-        </tr>
-        <tr>
-          <td><label for="email">Email:</label></td>
-          <td><input type="email" id="email" name="email" required></td>
-        </tr>
-        <tr>
-          <td><label for="message">Message:</label></td>
-          <td><textarea id="message" name="message" rows="4" required></textarea></td>
-        </tr>
-      </table>
-      <button type="submit">Submit Feedback</button>
-    </form>
-  </div>
-</section>
-<!-- End Feedback Form Section -->
-
-
+</body>
+</html>
 {% endblock %}

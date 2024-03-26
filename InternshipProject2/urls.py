@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 # from InternshipProject2 import settings
 
-from OrchardGuard.views import insert_item_view, load_excel, search, index_documents_opensearch, elastic_search,  list_search, any_search,upload_and_predict,homepage,feedback,information_page,login_or_register
+from OrchardGuard.views import insert_item_view, load_excel, search, index_documents_opensearch, elastic_search,  list_search, any_search,upload_and_predict,homepage,feedback,information_page,login,logout_view,signup
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,7 +36,9 @@ urlpatterns = [
     path('homepage/image_recognition/', upload_and_predict, name='upload_and_predict'),
     path('homepage/', homepage, name='homepage'),
     path('infohub/', information_page, name='infohub'),
-    path('login/', login_or_register, name='login')
+    path('login/', login, name='login'),
+    path('signup/', signup, name='signup'),
+    path('logout/', logout_view, name='logout'),
 
 
 

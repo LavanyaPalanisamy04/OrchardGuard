@@ -28,6 +28,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Form</title>
     <style>
+        .main-container {
+            display: flex; /* This will create a flexbox container */
+            justify-content: space-between; /* This will space out the children */
+             /* Align items at the start of the cross axis */
+        }
+
+        .search-container {
+            /* Set a flex basis if needed, remove max-width if the width should be dynamic */
+            flex: 1; /* The form takes 1 part of the available space */
+            margin-right: 20px; /* Add some margin between form and table */
+        }
+
+        .table-container {
+            flex: 2; /* The table takes 2 parts of the available space */
+            overflow-x: auto; /* Allow horizontal scrolling on smaller screens */
+        }
         /* Add your CSS styles for the search form here */
 
 .container {
@@ -79,7 +95,7 @@ button[type="submit"]:hover {
 {#    <link rel="stylesheet" href="{% static 'css/styles.css' %}">#}
 </head>
 <body>
-    <div class="container">
+    <div class="main-container">
         <div class="search-container">
 
                 <h1>Search Form</h1>

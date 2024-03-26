@@ -1,6 +1,6 @@
 # forms.py
 from django import forms
-
+from .models import Feedback
 class SearchForm(forms.Form):
     acno = forms.CharField(label='Acno', max_length=100, required=False)
     accession = forms.CharField(label='Accession', max_length=100,required=False)
@@ -36,5 +36,12 @@ class RegistrationForm(forms.Form):
     last_name = forms.CharField(max_length=50)
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['name', 'email', 'message']
+
 
 
