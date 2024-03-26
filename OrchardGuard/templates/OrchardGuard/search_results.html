@@ -23,5 +23,18 @@
     {% else %}
         <p>No items found.</p>
     {% endif %}
+
+   <form id="exportForm" action="{% url 'export_csv' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="items" value="{{ items }}">
+        <label for="exportOption">Export as:</label>
+        <select id="exportOption" name="exportOption">
+            <option value="csv">CSV</option>
+            <option value="pdf">PDF</option>
+            <option value="word">WORD</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Export</button>
+    </form>
+
 </body>
 </html>
