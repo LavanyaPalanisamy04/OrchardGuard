@@ -20,16 +20,15 @@ from django.conf.urls.static import static
 from django.conf import settings
 # from InternshipProject2 import settings
 
-from OrchardGuard.views import insert_item_view, load_excel, search, index_documents_opensearch, elastic_search,  list_search, any_search,upload_and_predict,homepage,feedback,information_page,login,logout_view,signup
+from OrchardGuard.views import index_documents_opensearch, elastic_search, list_search, any_search, upload_and_predict, \
+    homepage, feedback, information_page, login, logout_view, signup, export_csv
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('insert-item/', insert_item_view, name='insert-item'),
-    path('load-data/', load_excel, name='load_excel'),
     path('search/', elastic_search, name='search'),
     path('list-search/', list_search, name='list_search'),
-
     path('any-search/', any_search, name='any_search'),
+    path('export-csv/', export_csv, name='export_csv'),
     path('feedback/', feedback, name='feedback'),
 
     path('index-data/', index_documents_opensearch, name='index-documents'),
