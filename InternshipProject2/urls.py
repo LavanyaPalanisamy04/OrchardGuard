@@ -20,8 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 # from InternshipProject2 import settings
 
-from OrchardGuard.views import index_documents_opensearch, elastic_search, list_search, any_search, upload_and_predict, \
-    homepage, feedback, information_page, login, logout_view, signup, export_csv
+from OrchardGuard.views import index_documents_opensearch, elastic_search, list_search, any_search, upload_and_predict, homepage, feedback, information_page, login, logout_view, signup, export_csv
 
 urlpatterns = [
     path('admin/', admin.site.urls),

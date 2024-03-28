@@ -27,7 +27,7 @@ from .forms import FeedbackForm
 from .forms import ListSearchForm, AnySearchForm
 from .forms import SearchForm
 
-cred = credentials.Certificate('C:\\Users\\lavan\\PycharmProjects\\InternshipProject2\\security_key.json')
+cred = credentials.Certificate('D:\\pycharmproject\\djangoProject\\OrchardGuard\\security_key.json')
 default_app = firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://apple-disease-detection-ab165-default-rtdb.firebaseio.com/'
 })
@@ -372,7 +372,33 @@ def information_page(request):
 
 
 def login(request):
-    return render(request, 'OrchardGuard/vinsha_login.html')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Correct Firebase REST API endpoint for signing in with email and password
+        url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={settings.FIREBASE_WEB_API_KEY}"
+
+        # Data should be sent in the body of the POST request as JSON
+        data = {
+            'email': email,
+            'password': password,
+            'returnSecureToken': True,
+        }
+
+        response = requests.post(url, json=data)  # Use json=data to send the payload as JSON
+
+        if response.status_code == 200:
+            # Login was successful, you can now redirect or set session data
+            return redirect('/homepage/')
+        else:
+            # Decode the response to get the error message
+            error_message = response.json().get('error', {}).get('message', 'Unknown error')
+            messages.error(request, f'Login failed. Reason: {error_message}')
+            return render(request, 'OrchardGuard/login.html')
+
+    return render(request, 'OrchardGuard/login.html')
+
 
 
 def signup(request):
@@ -404,7 +430,8 @@ def signup(request):
             messages.error(request, f"Failed to create account: {str(e)}")
             return render(request, 'OrchardGuard/signup.html')
     else:
-        return render(request, 'OrchardGuard/signup.html')
+        return render(request,'OrchardGuard/signup.html')
+
 
 
 # def login_or_register(request):

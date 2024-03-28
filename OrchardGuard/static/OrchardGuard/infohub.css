@@ -1,0 +1,136 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%; /* Updated to full width */
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #4C0000;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.search-options {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-option {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.search-option:hover {
+    transform: translateY(-5px);
+}
+
+.form-container {
+    width: 100%; /* Full width for forms */
+    display: none; /* Hide all forms initially */
+}
+
+.form-container.active {
+    display: block; /* Show active form */
+}
+
+/* Styles for form elements */
+form {
+    width: 100%;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #4C0000;
+}
+
+input[type="text"],
+button[type="submit"] {
+    width: calc(100% - 20px); /* Adjust for padding */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+button[type="submit"] {
+    border: none;
+    background-color: crimson;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #900;
+}
+
+/* Styles for the results display */
+#search-results {
+    width: 100%; /* Ensure results take full width */
+    margin-top: 20px;
+}
+
+/* Styles for the table inside results container */
+#search-results table {
+    width: 100%; /* Ensure table takes full width */
+    border-collapse: collapse;
+}
+
+#search-results td,
+#search-results th {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size:18px;
+}
+
+#search-results th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4C0000;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+    }
+
+    .search-options,
+    .form-container,
+    .results-container {
+        width: 100%;
+    }
+
+    .search-option {
+        width: 100%;
+        margin-bottom: 10px; /* Provide spacing between buttons on smaller screens */
+    }
+}
+
+/* Make the Any Search form visible by default */
+#any-search-form {
+    display: block;
+}

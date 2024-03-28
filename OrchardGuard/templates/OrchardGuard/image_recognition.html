@@ -1,376 +1,165 @@
-{#{% load static %}#}
-{##}
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
-{#    <title>Image Recognition</title>#}
-{#    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">#}
-{##}
-{#     <style>#}
-{#        body {#}
-{#    font-family: 'Open Sans', sans-serif; /* Modern font */#}
-{#    margin: 0;#}
-{#    padding: 0;#}
-{#    background-image: url('https://images.pexels.com/photos/8249135/pexels-photo-8249135.jpeg');#}
-{#    background-size: cover;#}
-{#    background-position: center;#}
-{#    background-repeat: no-repeat;#}
-{#    color: #333; /* Ensures text is readable on all parts of the site */#}
-{#}#}
-{##}
-{#.title-bar {#}
-{#    background-color: rgba(0, 0, 0, 0.5);#}
-{#    color: white;#}
-{#    padding: 10px 20px;#}
-{#    text-align: right;#}
-{#}#}
-{##}
-{#.title-bar a {#}
-{#    color: white;#}
-{#    margin-left: 10px;#}
-{#    text-decoration: none;#}
-{#    font-weight: bold; /* Make the navigation items pop */#}
-{#}#}
-{##}
-{#.container {#}
-{#    display: flex;#}
-{#    justify-content: space-around; /* Updated for better spacing */#}
-{#    padding: 40px;#}
-{#    flex-wrap: wrap; /* Ensure it works on mobile */#}
-{#}#}
-{##}
-{#.image-container, .info-container {#}
-{#    width: 45%;#}
-{#    background-color: rgba(255, 255, 255, 0.9); /* Slightly more opaque for readability */#}
-{#    border-radius: 10px;#}
-{#    padding: 20px;#}
-{#    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Soft shadow for depth */#}
-{#    margin: 10px;#}
-{#    transition: all 0.3s ease; /* Smooth transition for all animatable properties */#}
-{#}#}
-{##}
-{#.info-container {#}
-{#    display: none; /* Keep this hidden until needed */#}
-{#}#}
-{##}
-{#h1 {#}
-{#    font-size: 2em; /* Increase font size */#}
-{#}#}
-{##}
-{#input[type="file"] {#}
-{#    display: none;#}
-{#}#}
-{##}
-{#label.btn {#}
-{#    display: inline-block;#}
-{#    padding: 12px 25px;#}
-{#    background-color: #4CAF50;#}
-{#    color: white;#}
-{#    text-decoration: none;#}
-{#    border: none;#}
-{#    border-radius: 5px;#}
-{#    cursor: pointer;#}
-{#    font-size: 18px; /* Larger font size for better clickability */#}
-{#    transition: background-color 0.3s ease; /* Smooth background-color transition */#}
-{#}#}
-{##}
-{#label.btn:hover, label.btn:focus {#}
-{#    background-color: #45a049; /* Subtle hover effect */#}
-{#    outline: none; /* Remove outline on focus for a cleaner look */#}
-{#}#}
-{##}
-{##preview-container {#}
-{#    margin-top: 20px;#}
-{#}#}
-{##}
-{#img {#}
-{#    max-width: 100%;#}
-{#    height: auto;#}
-{#    border-radius: 5px; /* Rounded corners for the images */#}
-{#}#}
-{##}
-{#@media (max-width: 768px) {#}
-{#    .container {#}
-{#        flex-direction: column; /* Stack containers on smaller screens */#}
-{#    }#}
-{#    .image-container, .info-container {#}
-{#        width: 90%; /* Full width containers on smaller screens */#}
-{#    }#}
-{#}#}
-{##}
-{#    </style>#}
-{##}
-{##}
-{#</head>#}
-{#<body>#}
-{##}
-{#    <div class="container">#}
-{#        <div class="image-container" id="imageContainer">#}
-{#            <h1>Upload Image for Recognition</h1>#}
-{#            <form id="uploadForm" enctype="multipart/form-data">#}
-{#                {% csrf_token %}#}
-{#                <p>Select an image of apple leaves or fruit:</p>#}
-{#                <input type="file" id="fileInput" name="image_file" accept="image/*" capture="camera" required>#}
-{#                <label for="fileInput" class="btn">Choose Image</label>#}
-{#                <button type="submit" class="btn">Upload Image</button>#}
-{#            </form>#}
-{#            <div id="preview-container">#}
-{#                <div id="preview"></div>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="info-container" id="disease-info-container"></div>#}
-{#    </div>#}
-{##}
-{#    <script>#}
-{#        document.getElementById('uploadForm').addEventListener('submit', function(e) {#}
-{#            e.preventDefault(); // Prevent the default form submission#}
-{#            const formData = new FormData(this);#}
-{#            const xhr = new XMLHttpRequest();#}
-{#            xhr.open('POST', '{% url 'upload_and_predict' %}', true); // Adjust the URL as needed#}
-{#            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');#}
-{##}
-{#            xhr.onload = function() {#}
-{#        if (xhr.status === 200) {#}
-{#            // Parse the JSON response#}
-{#            const response = JSON.parse(xhr.responseText);#}
-{#            let content = '';#}
-{#            if (response.class === 'Apple_Scab') {#}
-{#                content = `#}
-{#                    <h2>Disease Information</h2>#}
-{#                    <p><strong>Disease Name:</strong> Apple Scab</p>#}
-{#                    <p><strong>Reason:</strong> Apple scab, caused by the fungus Venturia inaequalis, is a serious fungal disease of apple in Ontario infecting#}
-{#                     foliage, blossoms, and fruits. Severely infected trees become defoliated and infected fruit are not marketable. Apple scab also attacks#}
-{#                     flowering crab apples, mountain ash, and firethorn.</p>#}
-{#                    <p><strong>Preventive measures:</strong> <br>#}
-{#<ul>#}
-{#    <li><strong>Resistant Varieties:</strong> Choose and plant apple varieties that are resistant to cedar-apple rust. Resistance varies among different apple cultivars, so selecting the right variety is crucial.</li>#}
-{#    <li><strong>Remove Alternate Hosts:</strong> Eliminate cedar and other juniper plants within a certain radius (usually about a mile) of apple trees to break the life cycle of the fungus. If removal is not possible, plant resistant juniper varieties that are less likely to harbor the rust fungus.</li>#}
-{#    <li><strong>Pruning and Sanitation:</strong> Prune apple trees to improve air circulation and sunlight penetration throughout the canopy, which can help reduce humidity and the conditions that favor rust development. Clean up and dispose of infected leaves and branches properly.</li>#}
-{#    <li><strong>Fungicide Applications:</strong> Apply fungicides during the spring, especially before rain when the orange rust spores are likely to be released. Fungicide applications should be timed based on the development stage of the apple trees and the appearance of rust galls on junipers.</li>#}
-{#    <li><strong>Regular Monitoring:</strong> Inspect both junipers and apple trees regularly for signs of cedar-apple rust. Early detection allows for timely management actions to prevent the spread of the disease.</li>#}
-{#    <li><strong>Proper Irrigation:</strong> Water apple trees at the soil level to avoid wetting the leaves, which can help prevent the spread of rust spores. Avoid overhead irrigation that can splash spores onto apple foliage.</li>#}
-{#    <li><strong>Optimal Planting and Spacing:</strong> Ensure that apple trees are planted with adequate spacing to promote good air circulation, which helps to reduce leaf wetness and the risk of infection.</li>#}
-{#    <li><strong>Mulching and Soil Health:</strong> Apply mulch around the base of apple trees to help maintain soil moisture and overall tree health, which can improve the tree's resistance to various stresses, including rust.</li>#}
-{#</ul>#}
-{##}
-{##}
-{#</p>#}
-{#                `;#}
-{#            }#}
-{#            else if (response.class === 'Cedar_Apple_Rust'){#}
-{#                content = `#}
-{#                    <h2>Disease Information</h2>#}
-{#                    <p><strong>Disease Name:</strong> Cedar Apple Rust</p>#}
-{#                    <p><strong>Reason:</strong> Cedar-apple rust is a common plant disease caused by the fungal pathogen Gymnosporangium juniperi-virginianae.#}
-{#                    It infects members of the Rosaceae and Cupressaceae families, primarily apple, crabapple, eastern redcedar, and other juniper species.</p>#}
-{#                    <p><strong>Preventive measures:</strong> <br>#}
-{#                    <ul>#}
-{#                        <li><strong>Resistant Varieties:</strong> Plant apple varieties that are resistant or less susceptible to apple scab. This is one of the most effective ways to prevent the disease.</li>#}
-{#                        <li><strong>Pruning and Sanitation:</strong> Regularly prune your apple trees to improve air circulation and remove any dead or diseased branches. Clean up fallen leaves and fruit, which can harbor the fungus over winter.</li>#}
-{#                        <li><strong>Proper Spacing:</strong> Plant apple trees with enough space between them to ensure good air circulation, reducing humidity and the risk of infection.</li>#}
-{#                        <li><strong>Fungicide Applications:</strong> Apply fungicides preventatively, especially during the early stages of leaf development and before rainy periods, to protect trees from apple scab. Be sure to follow local guidelines and use products approved for use on apple trees.</li>#}
-{#                        <li><strong>Irrigation Practices:</strong> Water apple trees at the base to avoid wetting the leaves. Overhead watering can spread the fungus and increase the risk of infection.</li>#}
-{#                        <li><strong>Improved Drainage:</strong> Ensure that your orchard or garden has good drainage. Waterlogged soil can contribute to the severity of apple scab infections.</li>#}
-{#                        <li><strong>Monitoring and Early Detection:</strong> Regularly inspect your apple trees for signs of apple scab and apply appropriate treatments promptly to prevent the spread of the disease.</li>#}
-{#                        <li><strong>Crop Rotation and Diversity:</strong> If possible, avoid planting apple trees in the same location where scab-susceptible plants have been grown recently. Introducing biodiversity can also help manage pests and diseases.</li>#}
-{#</ul>#}
-{#</p>#}
-{##}
-{##}
-{#`;#}
-{#            }#}
-{#            else if (response.class === 'Powdery_mildew'){#}
-{#                content = `#}
-{#                    <h2>Disease Information</h2>#}
-{#                    <p><strong>Disease Name:</strong>Powdery Mildew</p>#}
-{#                    <p><strong>Reason:</strong> <br> Powdery mildew, mainly caused by the fungus Podosphaera xanthii, infects all cucurbits, including muskmelons,#}
-{#                    squash, cucumbers, gourds, watermelons and pumpkins. Powdery mildew infections favor humid conditions with temperatures around 68-81° F.#}
-{#                    In warm, dry conditions, new spores form and easily spread the disease. </p>#}
-{#                    <p><strong>Preventive Measures:</strong> <br>#}
-{#                    <ul>#}
-{#                        <li><strong>Resistant Varieties: </strong>Plant apple varieties that are resistant or less susceptible to powdery mildew.</li>#}
-{#                        <li><strong>Pruning and Training: </strong>Regularly prune and train trees to improve air circulation and reduce humidity, making the environment less#}
-{#                        favorable for powdery mildew.</li>#}
-{#                        <li><strong>Proper Planting and Spacing: </strong>Ensure trees are planted at the appropriate spacing to reduce humidity and increase air flow among#}
-{#                        the plants.</li>#}
-{#                        <li><strong>Optimal Fertilization: </strong>Avoid excessive nitrogen fertilization and use balanced fertilizers based on soil test results to promote#}
-{#                        healthy growth without encouraging susceptible new growth.</li>#}
-{#                        <li><strong>Fungicide Applications:</strong> Apply fungicides preventively, especially in regions where powdery mildew is a persistent problem,#}
-{#                        according to local extension guidelines and when conditions favor disease development.</li>#}
-{#                        <li><strong>Sanitation: </strong>Remove and destroy any infected leaves, shoots, or fruit, and clean up fallen leaves and debris around the trees in the#}
-{#                        fall.</li>#}
-{#                        <li><strong>Monitoring: </strong>Regularly inspect apple trees for signs of powdery mildew and manage the spread of the disease through early detection.</li>#}
-{#                        <li><strong>Microclimate Management: </strong>Manage the orchard's microclimate to reduce humidity levels through site selection, irrigation management,#}
-{#                        and other cultural practices.</li>#}
-{#                    </ul>#}
-{#                    </p>#}
-{#                    `;#}
-{#            }#}
-{#            else {#}
-{#                // Handle other predictions or provide a default message#}
-{#                content = `<h2>Prediction</h2>#}
-{#                            <p>The uploaded image shows that you're plant is ${response.class}</p>`;#}
-{#            }#}
-{#            document.getElementById('disease-info-container').innerHTML = content;#}
-{#            document.getElementById('disease-info-container').style.display = 'block';#}
-{#        } else {#}
-{#            // Handle errors or unsuccessful responses#}
-{#            document.getElementById('disease-info-container').innerHTML = '<p>Failed to get prediction from FastAPI.</p>';#}
-{#            document.getElementById('disease-info-container').style.display = 'block';#}
-{#        }#}
-{#    };#}
-{##}
-{#    xhr.send(formData); // Send the form data#}
-{#});#}
-{##}
-{#const fileInput = document.getElementById('fileInput');#}
-{#const previewContainer = document.getElementById('preview-container');#}
-{#const preview = document.getElementById('preview');#}
-{#const imageContainer = document.getElementById('imageContainer');#}
-{##}
-{#fileInput.addEventListener('change', function() {#}
-{#    const file = this.files[0];#}
-{#    if (file) {#}
-{#        const reader = new FileReader();#}
-{#        reader.onload = function() {#}
-{#            const img = new Image();#}
-{#            img.src = reader.result;#}
-{#            preview.innerHTML = '';#}
-{#            preview.appendChild(img);#}
-{#            previewContainer.style.display = 'block';#}
-{#            imageContainer.style.width = '20%'; // Adjust according to your preference#}
-{#        };#}
-{#        reader.readAsDataURL(file);#}
-{#    }#}
-{#});#}
-{#    </script>#}
-{#</body>#}
-{#</html>#}
 
-
-{% extends "OrchardGuard/common.html" %}
-
+{% extends 'OrchardGuard/base.html' %}
 {% load static %}
-{% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{#     <link rel="stylesheet" href="{% static 'OrchardGuard/predictstyle.css' %}">#}
-    <title>Image Recognition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+{% block extra_head %}
+    <title>Disease Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-+0n0xVW2eSR5Zgb2q9WrMuuMSwUx6j7U3DBQk5rVjNExlSMXQz/i5XyJ2c5IQF5k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href={% static 'OrchardGuard/predict.css' %}>
     <style>
-            .infocontainer {
+    html {
+	font-size: 10px;
+	font-family: 'Montserrat', sans-serif;
+	scroll-behavior: smooth;
+}
+a {
+	text-decoration: none;
+}
+    .bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Stay behind all content */
+    filter: blur(1px); /* Add blur effect */
+    {#-webkit-filter: blur(px); /* For Safari */#}
+}
 
-         position: relative; /* Set the position to relative */
-    z-index: 1; /* Set a higher z-index to ensure it appears above other elements */
-    display: flex;
-    justify-content: center;
+/* Header Section Styling */
+#header .container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+
+}
+
+#header .nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+#header .brand h1 {
+  font-size: 3rem; /* Adjust the size to match the design */
+  font-weight: 700;
+  color: #fff;
+  {#margin: 0;#}
+  margin-right:0px;
+
+     font-family:Lucida Handwriting;
+}
+
+#header .brand h1 span {
+  color: #FF0000; /* The color of the spans to make them red */
+}
+
+#header .nav-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+#header .nav-list ul li {
+  padding: 0 20px;
+}
+
+#header .nav-list ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 2.0rem;
+    font-weight: 500;/* Adjust the size to match the design */
+  transition: color 0.2s;
+    letter-spacing: 0.1rem;
+    font-family: 'Montserrat', sans-serif;
+
+
+
+}
+
+#header .nav-list ul li a:hover {
+  color: #FF0000;
+}
+
+/* Responsive design adjustments, if necessary */
+@media (max-width: 768px) {
+  #header .nav-bar {
+    flex-direction: column;
+  }
+
+  #header .nav-list {
+    width: 100%;
+  }
+
+  #header .nav-list ul {
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
-    padding-top: 60px;
-    }
+  }
 
-
-    .image-container {
-    position: relative; /* Set the position to relative */
-    z-index: 2; /* Set a higher z-index */
-    margin-top: 100px;
-    margin-left: 10px;
-    width: 45%;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    font-size: 15px;
-    text-align: center;
+  #header .nav-list ul li {
+    padding: 10px 0;
+  }
 }
 
-    h1,
-    h2,
-    p {
-        margin: 0; /* Remove default margin to control spacing more precisely */
-    }
+/* Fixed Header */
+#header {
+  position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
 
-    ul {
-        margin-top: 0.5em; /* Adjust spacing above unordered lists */
-        padding-left: 1em; /* Indent list items */
-    }
-
-    li {
-        margin-bottom: 0.5em; /* Add spacing between list items */
-    }
-
-    img {
-        max-width: 100%; /* Adjusted max-width for better responsiveness */
-        height: auto;
-        border-radius: 5px; /* Rounded corners for the images */
-    }
-
-    .btn {
-        background-color: #4CAF50; /* Green */
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: block; /* Make the button a block-level element */
-        font-size: 16px;
-        margin: 20px auto; /* Center the button horizontally with top margin */
-        cursor: pointer;
-        border-radius: 8px;
-        width: 100%; /* Make the button fill the container width */
-        max-width: 200px; /* Limit button width */
-    }
-
-    .btn:hover {
-        background-color: #45a049; /* Darker green */
-    }
-
-    .result-container {
-    position:relative; /* Set the position to relative */
-    z-index: 2; /* Set a higher z-index */
-    margin-left: 30px;
-    margin-right: 10px;
-    margin-top: 200px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
-    padding: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    font-size: 16px;
-    text-align: center;
-}
-.container{
-    padding-bottom: 60px;
+	width: 100%;
 }
 
-    </style>
+/* Add padding at the top of the body to avoid overlap with the fixed header */
+body {
+  padding-top: 80px; /* Adjust if your header's actual height is different */
+}
 
 
+</style>
 
-</head>
-<body>
-{% block sidelink %}{% endblock %}
- <video id="hero-video" autoplay muted loop>
-        <source src="{% static 'OrchardGuard/videos/home.mp4' %}" type="video/mp4">
-        <!-- Add additional source elements for other video formats if needed -->
-        Your browser does not support the video tag.
-      </video>
+{% endblock %}
+{% block content %}
+ <section id="header">
+  <div class="header container">
+    <div class="nav-bar">
+      <div class="brand">
+        <a href="#hero">
+          <h1><span>O</span>rchard <span>G</span>uard</h1>
+        </a>
+      </div>
+      <div class="nav-list">
+        <ul>
+          <li><a href="#hero" data-after="Home">HOME</a></li>
+          <li><a href="#services" data-after="Service">ABOUT US</a></li>
+          <li><a href="#contact" data-after="Projects">CONTACT US</a></li>
+          <li><a href="{% url 'upload_and_predict' %}">PREDICT</a></li>
+          <li><a href="{% url 'infohub' %}">INFOHUB</a></li>
+          <li><a href="{% url 'logout' %}">LOGOUT</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
 
+<!-- Rest of your content -->
 
+<video autoplay muted loop class="bg-video">
+    <source src="{% static 'OrchardGuard/videos/home.mp4' %}" type="video/mp4">
+    Your browser does not support HTML5 video.
+</video>
 
+    <h1>Disease Prediction</h1>
 
-
-    <div class="infocontainer">
+<div class="infocontainer">
         <div class="image-container" id="imageContainer">
-            <h1>Upload Image for Recognition</h1>
+            <h2>Upload Image for Recognition</h2>
             <form id="uploadForm" enctype="multipart/form-data">
                 {% csrf_token %}
                 <p>Select an image of apple leaves or fruit:</p>
@@ -514,7 +303,5 @@ fileInput.addEventListener('change', function() {
     }
 });
     </script>
-</body>
-</html>
 
 {% endblock %}

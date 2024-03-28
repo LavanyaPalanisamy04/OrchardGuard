@@ -1,125 +1,169 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Information</title>
+
+{% extends 'OrchardGuard/base.html' %}
+{% load static %}
+{% block extra_head %}
+    <title>Disease Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-+0n0xVW2eSR5Zgb2q9WrMuuMSwUx6j7U3DBQk5rVjNExlSMXQz/i5XyJ2c5IQF5k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href={% static 'OrchardGuard/infohub.css' %}>
     <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
+    html {
+	font-size: 10px;
+	font-family: 'Montserrat', sans-serif;
+	scroll-behavior: smooth;
+}
+a {
+	text-decoration: none;
+}
+    .bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Stay behind all content */
+    filter: blur(1px); /* Add blur effect */
+    {#-webkit-filter: blur(px); /* For Safari */#}
 }
 
-.container {
-    display: flex;
+/* Header Section Styling */
+#header .container {
+    height: 60px;
+  max-width: 100%;
+  margin: 0 auto;
+   padding-left: 10px; /* Adjust as needed for your design */
+  padding-right: 20px;
+}
+
+#header .nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+    height: 30px;
+}
+#header .brand {
+  margin-right: 0px; /* This will push the brand to the left */
+}
+#header .brand h1 {
+  font-size: 3.0rem; /* Adjust the size to match the design */
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  {#margin-right:0px;#}
+    white-space: nowrap;
+
+     font-family:Lucida Handwriting;
+}
+
+#header .brand h1 span {
+  color: #FF0000; /* The color of the spans to make them red */
+}
+
+#header .nav-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+    margin-left: 90px;
+     flex-wrap: nowrap;
+}
+
+#header .nav-list ul li {
+  padding: 0 20px;
+}
+
+#header .nav-list ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 2.0rem;
+    font-weight: 10;/* Adjust the size to match the design */
+  transition: color 0.2s;
+    letter-spacing: 0.12rem;
+    font-family:  sans-serif;
+     white-space: nowrap;
+     padding: 10 0 px;
+
+
+
+}
+
+#header .nav-list ul li a:hover {
+  color: #FF0000;
+}
+
+/* Responsive design adjustments, if necessary */
+@media (max-width: 768px) {
+  #header .nav-bar {
+    flex-direction: column;
+  }
+
+  #header .nav-list {
+    width: 100%;
+  }
+
+  #header .nav-list ul {
     flex-direction: column;
     align-items: center;
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
+  }
+
+  #header .nav-list ul li {
+    padding: 10px 0;
+  }
 }
 
-h1 {
-    color: #4C0000;
-    margin-bottom: 20px;
+/* Fixed Header */
+#header {
+  position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+    background-color: #29323c;
+
+	width: 100%;
 }
 
-.search-options {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.search-option {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.search-option:hover {
-    transform: translateY(-5px);
-}
-
-.form-container {
-    width: 100%; /* Full width for forms */
-    display: none; /* Hide all forms initially */
-}
-
-.form-container.active {
-    display: block; /* Show active form */
-}
-
-/* Styles for form elements */
-form {
-    width: 100%;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    color: #4C0000;
-}
-
-input[type="text"],
-button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-button[type="submit"] {
-    border: none;
-    background-color: crimson;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button[type="submit"]:hover {
-    background-color: #900;
-}
-
-/* Styles for the results display */
-#search-results {
-    width: 100%;
-    margin-top: 20px;
-}
-
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-    }
-
-    .search-options,
-    .form-container,
-    .results-container {
-        width: 100%;
-    }
-
-    .search-option {
-        width: 100%;
-        margin-bottom: 10px; /* Provide spacing between buttons on smaller screens */
-    }
-}
-
-/* Make the Any Search form visible by default */
-#any-search-form {
-    display: block;
+/* Add padding at the top of the body to avoid overlap with the fixed header */
+body {
+  padding-top: 80px; /* Adjust if your header's actual height is different */
 }
 
 
-    </style>
-</head>
-<body>
+</style>
+
+{% endblock %}
+{% block content %}
+ <section id="header">
+  <div class="header container">
+    <div class="nav-bar">
+      <div class="brand">
+        <a href="#hero">
+          <h1><span>O</span>rchard <span>G</span>uard</h1>
+        </a>
+      </div>
+      <div class="nav-list">
+        <ul>
+          <li><a href="{% url 'homepage' %}">HOME</a></li>
+          <li><a href="#services" data-after="Service">ABOUT US</a></li>
+          <li><a href="#contact" data-after="Projects">CONTACT US</a></li>
+          <li><a href="{% url 'upload_and_predict' %}">PREDICT</a></li>
+          <li><a href="{% url 'infohub' %}">INFOHUB</a></li>
+          <li><a href="{% url 'logout' %}">LOGOUT</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Rest of your content -->
+
+{#<video autoplay muted loop class="bg-video">#}
+{#    <source src="{% static 'OrchardGuard/videos/home.mp4' %}" type="video/mp4">#}
+{#    Your browser does not support HTML5 video.#}
+{#</video>#}
+
     <div class="container">
         <h1>Search Information</h1>
         <div class="content-container"> <!-- This is the new parent flex container -->
@@ -233,7 +277,7 @@ button[type="submit"]:hover {
     // Run the setup functions when the window loads
     window.onload = function() {
         // Initially hide all forms
-        toggleFormVisibility();
+        toggleFormVisibility('any-search-form');
         // Setup the search option link event listeners
         setupSearchOptionLinks();
         // Setup the form submission event handlers
@@ -241,5 +285,4 @@ button[type="submit"]:hover {
     };
 </script>
 
-</body>
-</html>
+{% endblock %}

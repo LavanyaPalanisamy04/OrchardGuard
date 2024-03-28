@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "apple-disease-detection-ab165",
+  "private_key_id": "f8de5208e1797de9360ef5d4e5b68def0a8b2e3b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4CsB6qMMpd6zK\nhfgoC4mBCTHbIvMUNIEu6VpBNlFqNuQVWYkU6//m9+aA9lJguTAit28G1otDkPJB\nsvQnl8Bj3pjj5BatSBrcXwSvKE+XQeYsy/VpFBZpG2OMU28EylGNvJZQKYUcZkoy\nppBp1T+LXLFFYHLqajgiHzTeILXsVbWqcNVYEECqLWeiKVIxsas54gdILLwSGTYP\nhOIOut32RMT5ezm3muRjKZ5eLqMNVEuZIBIMxmAw6YyXK6YDjPHaXZ4Cfz4a64lN\nsHio3JHmWykV2E5fjTbfe/y2666bYAtV/2ObgUs1c0mNe91hPlfaWenist2KKeVZ\ndNnoHTxvAgMBAAECggEAREMYqWY3HQZafLO8G35L/iRe7ZzE9FWVJMVAyLdQ80hw\nyMpw4eW3AQAp6uNyIpYNmJLZB3xEI0d704qArL7IiUJjCwPqtVLtQ5eqsR0OiFfU\n/ACageMFfO6/uaiooOo53Yx5ZDpCOQpnsum83sRN0W8MAWOIvBGxyFYy0cDoOUPf\n26F0+JKCgrJUo7JwMe1jZ8wGoHZDD8i+C7d+5aQzKEN2X6B2zYQmLZTg+BsQVOfh\nJULy1KW99f9vSQiEnaWI043hHnNuIyZvCJyvOPVWFdOJzKlhOzlG61VhuUeCjetw\nRhEYpwbU8d/u0GJlvc24Xa9723u1GmLJW8LKVDjzAQKBgQDloFfD0jGkLlV75xLb\nP+IYbIcI6+mi/6Pfa5A2WAmfgOMoyrFlX9HFqdw3XbNKYap0TSogEMRNsq8vUEYe\n5tShVv+UqyfY2BfJddchWAABVVcXWwXDPUMOGC64Jz63krOZenwvLDHlCxl7jDKK\nRgqg/chvEEoxMSClFWbyFH2djwKBgQDNLhoSuSR3RhTtJElFEEBUsiXjpbh3VCKK\nnoFYH6NKtlqsc/i7d7pr1qHLzJUJ5SnMX8JMOQAmKy7O7ZdooduXEBT7mseHZemB\nbCK59TB9aG5xBEyFRaYuoKtIMruK1tFILc/40z0TFd5IrDiezf2aAvJaeuAi8+SF\nEq5XeJjDIQKBgAO7RFHZU5cwbZEy4xqPAjSVZuhdNRHCB760t8Y6TgW6iXZ7PMDB\n+t20cfCwZB58UdHMAzg8LYR5t+ET89/CrofkqwiWc3JRqKlMce+Hx5A9+8lUYFaY\n40MSX4f8k0dWafa/h88Yb8MiGArq71NR6hBNr3kmkZ4VB0vHekHK1XO/AoGAI2Cj\nlj7eDsLCsPDkwUfAD9p3tfzJBao4GnaiDrPF0AgJMlr8tDY8qoNjemRX/lDJGDga\npFHfuLURaRSGWsAtwKpBM/DIHoxv6qTeh/nC1py/DjWTjBcqRDfn0JcOxy2rACsG\nBP1HNpc6sIUhbiBObdO8PeWZ5+ztphRGg0aD8IECgYEAh0LkhDCrTeGUdnREUGs+\nAWm7+nkmwPlEjSv7KrRDz0cH0Vc432xh7JUlSUiJX9OlbRrDBZl5QkaU/IbW0eGu\nuqkyivAt+tpIaw8j7mve3vy6aUp6OA0VUpBuIdsKGIR02hgyOYSME1AlIchRCfEE\nKpTk8eHeoKEYxfQ/xo8AjPc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-7cdfr@apple-disease-detection-ab165.iam.gserviceaccount.com",
+  "client_id": "101134148737539514170",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-7cdfr%40apple-disease-detection-ab165.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
