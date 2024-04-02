@@ -29,7 +29,7 @@ from .forms import FeedbackForm
 from .forms import ListSearchForm, AnySearchForm
 from .forms import SearchForm
 
-cred = credentials.Certificate('D:\\pycharmproject\\djangoProject\\OrchardGuard\\security_key.json')
+cred = credentials.Certificate('C:\\Users\\lavan\\PycharmProjects\\InternshipProject2\\security_key.json')
 default_app = firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://apple-disease-detection-ab165-default-rtdb.firebaseio.com/'
 })
@@ -188,22 +188,35 @@ def export_pdf(items_list):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{EXPORT_FILENAME}.pdf"'
 
-    doc = SimpleDocTemplate(response, pagesize=letter)
+    doc = SimpleDocTemplate(response, pagesize=letter,
+                            rightMargin=inch * 0.5, leftMargin=inch * 0.5,
+                            topMargin=inch * 0.5, bottomMargin=inch * 0.5)
     elements = []  # List to hold elements to add to the document
     # Define the styles for the document
     styles = getSampleStyleSheet()
+    # Modify the heading style for the document title
+    heading_style = ParagraphStyle('YourHeading', parent=styles['Heading1'],
+                                   fontName='Times-Bold', fontSize=18,
+                                   leading=22, alignment=1, textColor=colors.black)
+    # Adding 'oblique' attribute to simulate italic style
+    heading_style.oblique = True
+
     heading_style = styles['Heading1']  # Use a predefined heading style
     heading_style.alignment = 1
+
     # Create the heading Paragraph and add it to the elements list
     heading_text = REPORT_HEADING
     heading = Paragraph(heading_text, heading_style)
     elements.append(heading)
 
+    # Define a style for the header with bold text and white font color
+    header_style = ParagraphStyle(name='HeaderStyle', fontSize=8, fontName='Helvetica-Bold', textColor=colors.white)
+
     # Define a style for wrapped text
     style = ParagraphStyle(name='WrapStyle', fontSize=8)
 
     # Create the header row with the column names
-    header_row = [Paragraph('<b>' + column + '</b>', style) for column in COLUMN_HEADER]
+    header_row = [Paragraph('<b>' + column + '</b>', header_style) for column in COLUMN_HEADER]
 
     # Filter the items_list to only include the columns you want
     data = [header_row] + [
@@ -216,19 +229,22 @@ def export_pdf(items_list):
         1 * inch, 0.75 * inch, 0.75 * inch, 0.75 * inch, 0.75 * inch
     ]
 
-    # Make sure the number of widths matches the number of columns
-    assert len(column_widths) == len(COLUMNS_TO_EXPORT), "Column widths do not match number of columns"
-
     # Create the table with the data and column widths
     table = Table(data, colWidths=column_widths)
 
-    # Add style to table, including borders
     table_style = TableStyle([
-        # ... your existing style definitions ...
-        ('BOX', (0, 0), (-1, -1), 1, colors.black),  # Outer border
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Inner grid
+        ('BOX', (0, 0), (-1, -1), 1, colors.black),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.darkred),  # Change maroon to dark red if needed
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align everything; remove if not desired
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Vertically align everything; remove if not desired
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Make header font bold
+        # Add more style options as needed...
     ])
     table.setStyle(table_style)
+    # extra line added to style
+    elements.append(Spacer(1, 12))
     elements.append(table)
 
     # List of elements to build the document with
@@ -436,6 +452,34 @@ def signup(request):
             return render(request, 'OrchardGuard/signup.html')
     else:
         return render(request,'OrchardGuard/signup.html')
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        # Correct Firebase REST API endpoint for sending a password reset email
+        url = f"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={settings.FIREBASE_WEB_API_KEY}"
+
+        # Data should be sent in the body of the POST request as JSON
+        data = {
+            'requestType': 'PASSWORD_RESET',
+            'email': email
+        }
+
+        response = requests.post(url, json=data)  # Use json=data to send the payload as JSON
+
+        if response.status_code == 200:
+            # Password reset email was sent successfully, inform the user
+            messages.success(request, 'A password reset email has been sent. Please check your inbox.')
+            return redirect('login')  # Redirect to the login page or wherever appropriate
+        else:
+            # Decode the response to get the error message
+            error_message = response.json().get('error', {}).get('message', 'Unknown error')
+            messages.error(request, f'Failed to send password reset email. Reason: {error_message}')
+            return render(request, 'OrchardGuard/forgot_password.html')
+
+    return render(request, 'OrchardGuard/forgot_password.html')
+
 
 
 
