@@ -22,6 +22,8 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
+from django.contrib.auth.decorators import login_required
+
 
 from .forms import FeedbackForm
 from .forms import ListSearchForm, AnySearchForm
@@ -347,6 +349,9 @@ def upload_and_predict(request):
 def homepage(request):
     return render(request, 'OrchardGuard/homepage.html')
 
+def nonuser(request):
+    return render(request, 'OrchardGuard/nonuser.html')
+
 
 def feedback(request):
     if request.method == 'POST':
@@ -459,4 +464,4 @@ def signup(request):
 def logout_view(request):
     logout(request)
     # Redirect to a success page.
-    return redirect('homepage')
+    return redirect('nonuser')

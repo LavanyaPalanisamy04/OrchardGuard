@@ -39,6 +39,7 @@ body{
     min-height: 100vh;
     background: rgba(39, 39, 39, 0.4);
     overflow:visible;
+    margin-bottom: 250px;
 }
 .nav{
     position: fixed;
@@ -103,6 +104,11 @@ body{
 .nav-menu-btn{
     display: none;
 }
+.form-row {
+    display: flex;
+    justify-content: space-between; /* Add space between the two input fields */
+    gap: 20px; /* Optional: Add some gap between the input fields */
+}
 .form-box{
     position: relative;
     display: flex;
@@ -158,12 +164,12 @@ header{
     gap: 10px;
 }
 .input-field{
-    font-size: 15px;
+    font-size: 18px;
     background: rgba(255, 255, 255, 0.484);
     color: #f5eded;
-    height: 50px;
-    width: 100%;
-    padding: 0 10px 0 45px;
+    height: 60px;
+    width: 300px;
+    padding:10px 20px;
     border: none;
     border-radius: 30px;
     outline: none;
@@ -180,6 +186,7 @@ header{
     top: -35px;
     left: 17px;
     color: #fff;
+    flex:1;
 }
 .submit{
     font-size: 15px;
@@ -193,6 +200,9 @@ header{
     background: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     transition: .3s ease-in-out;
+    display: block !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
 }
 .submit:hover{
     background: rgba(255, 255, 255, 0.5);
@@ -254,6 +264,11 @@ header{
         background: rgba(255, 255, 255, 0.15);
     }
 }
+
+.form-box {
+    z-index: auto; /* Or just remove the z-index property */
+}
+
 @media only screen and (max-width: 540px) {
     .wrapper{
         min-height: 100vh;

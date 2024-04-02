@@ -145,8 +145,8 @@ body {
       <div class="nav-list">
         <ul>
           <li><a href="{% url 'homepage' %}">HOME</a></li>
-          <li><a href="#services" data-after="Service">ABOUT US</a></li>
-          <li><a href="#contact" data-after="Projects">CONTACT US</a></li>
+          <li><a href="{% url 'homepage' %}">ABOUT US</a></li>
+          <li><a href="{% url 'homepage' %}">CONTACT US</a></li>
           <li><a href="{% url 'upload_and_predict' %}">PREDICT</a></li>
           <li><a href="{% url 'infohub' %}">INFOHUB</a></li>
           <li><a href="{% url 'logout' %}">LOGOUT</a></li>

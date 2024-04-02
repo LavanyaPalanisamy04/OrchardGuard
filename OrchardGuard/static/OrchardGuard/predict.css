@@ -1,6 +1,128 @@
-      .infocontainer {
+@import 'https://fonts.googleapis.com/css?family=Montserrat:300, 400, 700&display=swap';
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+    html {
+	font-size: 10px;
+	font-family: 'Montserrat', sans-serif;
+	scroll-behavior: smooth;
+}
+a {
+	text-decoration: none;
+}
+.bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: black;
+	opacity: 0.7;
+    z-index: -1; /* Stay behind all content */
+}
 
-         position: relative; /* Set the position to relative */
+/* Header Section Styling */
+#header .container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+
+}
+
+#header .nav-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	height: 100%;
+	max-width: 1300px;
+	/*padding: 0 20px;*/
+}
+
+#header .brand h1 {
+  font-size: 3rem; /* Adjust the size to match the design */
+  font-weight: 700;
+  color: #fff;
+  /*{#margin: 0;#}*/
+  margin-right:0px;
+
+     font-family:Lucida Handwriting;
+}
+
+#header .brand h1 span {
+  color: #FF0000; /* The color of the spans to make them red */
+}
+
+#header .nav-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+#header .nav-list ul a {
+	font-size: 1.8rem;
+	letter-spacing: 0.2rem;
+	text-decoration: none;
+	color: white;
+	text-transform: uppercase;
+	padding: 20px;
+	display: block;
+}
+#header .nav-list ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.8rem;
+  transition: color 0.2s;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#header .nav-list ul li a:hover {
+  color: #FF0000;
+}
+
+/* Responsive design adjustments, if necessary */
+@media (max-width: 768px) {
+  #header .nav-bar {
+    flex-direction: column;
+  }
+
+  #header .nav-list {
+    width: 100%;
+  }
+
+  #header .nav-list ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #header .nav-list ul li {
+    padding: 10px 0;
+  }
+}
+
+/* Fixed Header */
+#header {
+  position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+
+	width: 100%;
+}
+
+/* Add padding at the top of the body to avoid overlap with the fixed header */
+body {
+  padding-top: 80px; /* Adjust if your header's actual height is different */
+}
+
+
+
+.infocontainer {
+    position: relative; /* Set the position to relative */
     z-index: 1; /* Set a higher z-index to ensure it appears above other elements */
     display: flex;
     justify-content: space-evenly;
@@ -60,7 +182,7 @@
     }
 
     .btn {
-        background-color: #4CAF50; /* Green */
+        background-color: crimson; /* Green */
         border: none;
         color: white;
         padding: 15px 32px;
@@ -76,7 +198,7 @@
     }
 
     .btn:hover {
-        background-color: #45a049; /* Darker green */
+        background-color: crimson; /* Darker green */
     }
 
     .result-container {
