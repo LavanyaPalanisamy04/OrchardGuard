@@ -170,6 +170,11 @@ tr:hover {
     }
 }
 
+exportbutton{
+    width: 10px /* set the width */
+  height: 10px;
+
+}
 </style>
 
 
@@ -222,7 +227,7 @@ tr:hover {
             <option value="pdf">PDF</option>
             <option value="word">WORD</option>
         </select>
-        <button type="submit" class="btn btn-primary">Export</button>
+        <div class = "exportbutton"><button type="submit" class="">Export</button></div>
     </form>
     {% else %}
     <p>No items found.</p>

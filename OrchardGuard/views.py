@@ -29,7 +29,7 @@ from .forms import FeedbackForm
 from .forms import ListSearchForm, AnySearchForm
 from .forms import SearchForm
 
-cred = credentials.Certificate('C:\\Users\\lavan\\PycharmProjects\\InternshipProject2\\security_key.json')
+cred = credentials.Certificate("D:\pycharmproject\djangoProject\OrchardGuard\security_key.json")
 default_app = firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://apple-disease-detection-ab165-default-rtdb.firebaseio.com/'
 })
@@ -327,6 +327,7 @@ def export_csv(request):
             return HttpResponseBadRequest("Invalid JSON data.")
     else:
         return HttpResponseBadRequest("Invalid request method.")
+
 
 
 def upload_and_predict(request):

@@ -24,8 +24,8 @@
           </div>
           <ul>
             <li><a href="{% url 'homepage' %}" >Home</a></li>
-            <li><a href="#services" data-after="Service">About Us</a></li>
-            <li><a href="#contact" data-after="Projects">Contact us</a></li>
+            <li><a href="{% url 'homepage' %}" data-after="Service">About Us</a></li>
+            <li><a href="{% url 'homepage' %}" data-after="Projects">Contact us</a></li>
             <li><a href="{% url 'upload_and_predict' %}">Predict</a></li>
                <li><a href="{% url 'infohub' %}">Infohub</a></li>
              <li><a href="{% url 'logout' %}">Logout</a></li>

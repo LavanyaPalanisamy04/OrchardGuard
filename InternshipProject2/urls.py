@@ -15,16 +15,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
 # from InternshipProject2 import settings
+
+
+
 
 from OrchardGuard.views import index_documents_opensearch, elastic_search, list_search, any_search, upload_and_predict, \
     homepage, feedback, information_page, login, logout_view, signup, export_csv, nonuser, forgot_password
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('search/', elastic_search, name='search'),
     path('list-search/', list_search, name='list_search'),
     path('any-search/', any_search, name='any_search'),
@@ -34,9 +38,9 @@ urlpatterns = [
     path('index-data/', index_documents_opensearch, name='index-documents'),
     path('homepage/image_recognition/', upload_and_predict, name='upload_and_predict'),
     path('homepage/', homepage, name='homepage'),
-    path('nonuser/', nonuser, name='nonuser'),
+    path('', nonuser, name='nonuser'),
     path('infohub/', information_page, name='infohub'),
-    path('login/', login, name='login'),
+    path('/account/login/', login, name='login'),
     path('signup/', signup, name='signup'),
     path('logout/', logout_view, name='logout'),
     path('forgot_password/', forgot_password, name='forgot_password')

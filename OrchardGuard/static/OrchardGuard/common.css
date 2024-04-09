@@ -1,34 +1,13 @@
+
+
+/* Dropdown menu */
 @import 'https://fonts.googleapis.com/css?family=Montserrat:300, 400, 700&display=swap';
 * {
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
 }
-/* Dropdown menu */
-.dropdown-menu {
-    background-color: #ffffff; /* Background color */
-    border: 1px solid #ddd; /* Border color */
-    border-radius: 0; /* Border radius */
-    box-shadow: 0 2px 5px rgba(0,0,0,.15); /* Box shadow */
-}
-
-.dropdown-menu li {
-    display: block;
-}
-
-.dropdown-menu li a {
-    padding: 10px 15px; /* Padding */
-    color: #333; /* Text color */
-    text-decoration: none; /* Remove underline */
-    display: block;
-}
-
-.dropdown-menu li a:hover {
-    background-color: #f5f5f5; /* Hover background color */
-    color: #333; /* Hover text color */
-}
-
-html {
+    html {
 	font-size: 10px;
 	font-family: 'Montserrat', sans-serif;
 	scroll-behavior: smooth;
@@ -36,80 +15,26 @@ html {
 a {
 	text-decoration: none;
 }
-.container {
-	min-height: 100vh;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-img {
-	height: 100%;
-	width: 100%;
-	object-fit: cover;
-}
-p {
-	color: black;
-	font-size: 1.4rem;
-	margin-top: 5px;
-	line-height: 2.5rem;
-	font-weight: 300;
-	letter-spacing: 0.05rem;
-}
-.section-title {
-	font-size: 4rem;
-	font-weight: 300;
-	color: black;
-	margin-bottom: 10px;
-	text-transform: uppercase;
-	letter-spacing: 0.2rem;
-	text-align: center;
-}
-.section-title span {
-	color: crimson;
+.bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /*background-color: black;*/
+	/*opacity: 0.7;*/
+    z-index: -1; /* Stay behind all content */
 }
 
-.cta {
-	display: inline-block;
-	padding: 10px 30px;
-	color: white;
-	background-color: transparent;
-	border: 2px solid crimson;
-	font-size: 2rem;
-	text-transform: uppercase;
-	letter-spacing: 0.1rem;
-	margin-top: 30px;
-	transition: 0.3s ease;
-	transition-property: background-color, color;
-}
-.cta:hover {
-	color: white;
-	background-color: crimson;
-}
-.brand h1 {
-	font-size: 3rem;
-	text-transform: uppercase;
-	color: white;
-        font-family:Lucida Handwriting;
-}
-.brand h1 span {
-	color: crimson;
+/* Header Section Styling */
+#header .container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+
 }
 
-/* Header section */
-#header {
-	position: relative;
-	z-index: 1000;
-	left: 0;
-	top: 0;
-	width: 100vw;
-	height: auto;
-}
-#header .header {
-	min-height: 8vh;
-	background-color: rgba(31, 30, 30, 0.24);
-	transition: 0.3s ease background-color;
-}
 #header .nav-bar {
 	display: flex;
 	align-items: center;
@@ -117,30 +42,32 @@ p {
 	width: 100%;
 	height: 100%;
 	max-width: 1300px;
-	padding: 0 10px;
+	/*padding: 0 20px;*/
 }
+
+#header .brand h1 {
+  font-size: 3rem; /* Adjust the size to match the design */
+  font-weight: 700;
+  color: #fff;
+  /*{#margin: 0;#}*/
+  margin-right:0px;
+
+     font-family:Lucida Handwriting;
+}
+
+#header .brand h1 span {
+  color: #FF0000; /* The color of the spans to make them red */
+}
+
 #header .nav-list ul {
-	list-style: none;
-	position: absolute;
-	background-color: rgb(31, 30, 30);
-	width: 100vw;
-	height: 100vh;
-	left: 100%;
-	top: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	z-index: 1;
-	overflow-x: hidden;
-	transition: 0.5s ease left;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
 }
-#header .nav-list ul.active {
-	left: 0%;
-}
+
 #header .nav-list ul a {
-	font-size: 2.5rem;
-	font-weight: 500;
+	font-size: 1.8rem;
 	letter-spacing: 0.2rem;
 	text-decoration: none;
 	color: white;
@@ -148,80 +75,55 @@ p {
 	padding: 20px;
 	display: block;
 }
-#header .nav-list ul a::after {
-	content: attr(data-after);
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%) scale(0);
-	color: rgba(240, 248, 255, 0.021);
-	font-size: 13rem;
-	letter-spacing: 50px;
-	z-index: -1;
-	transition: 0.3s ease letter-spacing;
+#header .nav-list ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.8rem;
+  transition: color 0.2s;
+    font-family: 'Montserrat', sans-serif;
 }
-#header .nav-list ul li:hover a::after {
-	transform: translate(-50%, -50%) scale(1);
-	letter-spacing: initial;
+
+#header .nav-list ul li a:hover {
+  color: #FF0000;
 }
-#header .nav-list ul li:hover a {
-	color: crimson;
+
+/* Responsive design adjustments, if necessary */
+@media (max-width: 768px) {
+  #header .nav-bar {
+    flex-direction: column;
+  }
+
+  #header .nav-list {
+    width: 100%;
+  }
+
+  #header .nav-list ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #header .nav-list ul li {
+    padding: 10px 0;
+  }
 }
-#header .hamburger {
-	height: 60px;
-	width: 60px;
-	display: inline-block;
-	border: 3px solid white;
-	border-radius: 50%;
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	z-index: 100;
-	cursor: pointer;
-	transform: scale(0.8);
-	margin-right: 20px;
-}
-#header .hamburger:after {
-	position: absolute;
-	content: '';
-	height: 100%;
-	width: 100%;
-	border-radius: 50%;
-	border: 3px solid white;
-	animation: hamburger_puls 1s ease infinite;
-}
-#header .hamburger .bar {
-	height: 2px;
-	width: 30px;
-	position: relative;
-	background-color: white;
-	z-index: -1;
-}
-#header .hamburger .bar::after,
-#header .hamburger .bar::before {
-	content: '';
-	position: absolute;
-	height: 100%;
-	width: 100%;
+
+/* Fixed Header */
+#header {
+  position: fixed;
+	z-index: 1000;
 	left: 0;
-	background-color: white;
-	transition: 0.3s ease;
-	transition-property: top, bottom;
-}
-#header .hamburger .bar::after {
-	top: 8px;
-}
-#header .hamburger .bar::before {
-	bottom: 8px;
-}
-#header .hamburger.active .bar::before {
-	bottom: 0;
-}
-#header .hamburger.active .bar::after {
 	top: 0;
+
+	width: 100%;
 }
-/* End Header section */
+
+/* Add padding at the top of the body to avoid overlap with the fixed header */
+body {
+  padding-top: 80px; /* Adjust if your header's actual height is different */
+}
+
+
+
 
 /* Hero Section */
 #hero {
